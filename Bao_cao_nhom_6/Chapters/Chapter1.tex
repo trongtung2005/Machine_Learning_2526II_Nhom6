@@ -1,0 +1,174 @@
+% Chương 1
+
+\chapter{TỔNG QUAN} % Tên của chương
+
+\label{Chapter1} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Định nghĩa một số lệnh cần thiết để điều chỉnh định dạng cho một số nội dung nhất định trong bài
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+\section{Ngôn ngữ tự nhiên}
+
+Ngôn ngữ tự nhiên là công cụ biểu đạt và giao tiếp cốt lõi được con người hình thành, sử dụng để tương tác hàng ngày trong xã hội, chẳng hạn như tiếng Việt, tiếng Anh, tiếng Trung... Theo các thống kê định lượng trong ngôn ngữ học máy tính, trên thế giới hiện nay có khoảng hơn 5.600 ngôn ngữ khác nhau được phân bố không đồng đều và chỉ có một tỷ lệ nhỏ trong số đó sở hữu hệ thống chữ viết hoàn chỉnh \cite{jurafsky2020speech}. Khác biệt hoàn toàn với các hệ thống ngôn ngữ lập trình hay ngôn ngữ hình thức vốn vận hành dựa trên các quy tắc toán học bất biến, ngôn ngữ tự nhiên sở hữu cấu trúc hình thái phức tạp, linh hoạt và luôn chứa đựng nhiều sự mơ hồ \cite{singh2018natural}.
+
+Các đặc điểm hình thái và cú pháp cốt lõi của ngôn ngữ tự nhiên bao gồm:
+\begin{itemize}
+\item \textbf{Tính biến đổi}: Ngôn ngữ không mang trạng thái cố định mà liên tục biến đổi, tiến hóa theo thời gian, văn hóa và bối cảnh lịch sử của cộng đồng sử dụng \cite{singh2018natural}.
+
+\item \textbf{Tính đa nghĩa}: Một từ hoặc một cấu trúc câu trong ngôn ngữ tự nhiên có thể mang nhiều tầng ý nghĩa khác nhau tùy thuộc vào ngữ cảnh xuất hiện \cite{singh2018natural}. Ví dụ, từ "bank" trong tiếng Anh có thể đại diện cho tổ chức tín dụng ngân hàng hoặc bờ sông, đòi hỏi máy tính phải có khả năng khử nhập nhằng ngữ nghĩa \cite{singh2018natural}.
+
+\item \textbf{Tính ngữ cảnh}: Ngữ nghĩa thực tế của một thông điệp phụ thuộc chặt chẽ vào tình huống giao tiếp, đặc điểm nhân khẩu học của người nói, người nghe cũng như môi trường xung quanh \cite{singh2018natural}.
+
+\item \textbf{Tính không hoàn hảo}: Văn bản ngôn ngữ tự nhiên, đặc biệt là dữ liệu dạng văn bản thô trích xuất từ các nền tảng mạng xã hội, thường có mật độ nhiễu rất cao do chứa nhiều lỗi ngữ pháp, lỗi viết tắt, từ lóng hoặc lỗi chính tả cấu trúc câu không hoàn chỉnh \cite{singh2018natural}.
+
+\item \textbf{Tính hệ thống}: Mặc dù biến thiên liên tục, ngôn ngữ tự nhiên vẫn tuân thủ các quy tắc tổ chức cú pháp nghiêm ngặt ở cấp độ câu để đảm bảo thông điệp truyền tải có thể dự đoán và hiểu được \cite{singh2018natural}.
+
+\item \textbf{Tính đa phương thức}: Quá trình truyền tải thông điệp không chỉ dựa vào ký tự văn bản thuần túy mà còn kết hợp chặt chẽ với ngữ điệu, âm lượng hoặc các yếu tố phi ngôn từ để biểu đạt sắc thái biểu cảm \cite{singh2018natural}.
+
+\item \textbf{Tính phân cấp}: Cấu trúc của ngôn ngữ tự nhiên được tổ chức phân cấp một cách chặt chẽ từ các đơn vị nhỏ nhất là âm vị, hình vị, từ vựng cho đến các cấu trúc vĩ mô hơn như cụm từ, câu, đoạn văn và toàn bộ văn bản \cite{singh2018natural}.
+\end{itemize}
+
+Chính những đặc tính phức tạp và mơ hồ này đã tạo ra rào cản kỹ thuật rất lớn cho máy tính, biến việc xử lý dữ liệu chữ thô trở thành một tác vụ tốn kém và đòi hỏi nhiều lao động thủ công \cite{singh2018natural}. Việc thấu hiểu các đặc điểm này là tiền đề bắt buộc để xây dựng các mô hình học máy phân loại cảm xúc tự động ở các chương sau \cite{hastie2009elements},\cite{hochreiter1997long}.
+
+%----------------------------------------------------------------------------------------
+
+\section{Ngôn ngữ Tiếng Anh}
+
+Tiếng Anh thuộc loại hình ngôn ngữ phân tích, đồng thời vẫn lưu giữ một số đặc tính của ngôn ngữ hòa kết. Điều này đồng nghĩa với việc các mối quan hệ cú pháp và ngữ pháp trong câu được biểu thị chủ yếu thông qua trật tự từ và các hư từ (bao gồm giới từ, trợ động từ) thay vì biến đổi hình thái từ quá phức tạp như các ngôn ngữ thuần hòa kết. Tuy nhiên, khác với các ngôn ngữ đơn lập thuần túy như tiếng Việt, từ vựng tiếng Anh có cấu tạo dựa trên sự kết hợp chặt chẽ của các hình vị bao gồm gốc từ, tiền tố và hậu tố thành một khối thống nhất.
+
+Dựa trên các nghiên cứu ngôn ngữ học định lượng về phân tích máy tính của Kučera và Francis (1967), sự phân bố của hơn 170.000 từ vựng tiếng Anh thông dụng theo cấu trúc số lượng âm tiết được xác định cụ thể như sau \cite{kucera1967computational}:
+\begin{itemize}
+\item Khoảng 15\% số từ trong từ điển là từ đơn âm tiết (tuy nhiên nhóm từ này lại chiếm tần suất xuất hiện áp đảo, chiếm tới hơn 40\% trong văn bản và giao tiếp thực tế hàng ngày) \cite{kucera1967computational}.
+
+\item Khoảng 35\% số từ là từ sở hữu hai âm tiết \cite{kucera1967computational}.
+
+\item Khoảng 30\% số từ là từ sở hữu ba âm tiết \cite{kucera1967computational}.
+
+\item Khoảng 20\% còn lại là các từ đa âm tiết (có cấu trúc từ bốn âm tiết trở lên) \cite{kucera1967computational}.
+\end{itemize}
+
+Chính vì đặc thù của loại hình ngôn ngữ phân tích, việc sắp xếp các từ trong tiếng Anh theo một trật tự nghiêm ngặt là yếu tố cốt lõi để phân định vai trò ngữ pháp và ngữ nghĩa của câu. Ví dụ, cấu trúc câu "\textit{The dog bit the man}" (Con chó cắn người đàn ông) mang ý nghĩa đối lập hoàn toàn với "\textit{The man bit the dog}" (Người đàn ông cắn con chó). Nhờ vào kết cấu vị trí này, hệ thống mới phân định rõ ràng đâu là chủ thể hành động và đâu là đối tượng chịu tác động. Trong tiếng Anh, trật tự kết cấu câu chuẩn mực và phổ biến nhất tuân theo sơ đồ \textbf{SVO} (Chủ ngữ - Động từ - Tân ngữ: Subject - Verb - Object). Đặc điểm hệ thống về mặt hình thái và cú pháp này là cơ sở quan trọng để các công cụ tiền xử lý thực hiện bóc tách, đưa từ về dạng nguyên thể, từ đó giúp các mô hình học máy trích xuất chính xác mối quan hệ ngữ cảnh và phân loại đa nhãn cảm xúc \cite{singh2018natural}.
+
+\section{Xử lý ngôn ngữ tự nhiên}
+
+Xử lý ngôn ngữ tự nhiên (Natural Language Processing - NLP) là một lĩnh vực giao thoa cốt lõi giữa Trí tuệ nhân tạo (AI) và Khoa học máy tính, tập trung vào việc nghiên cứu các kỹ thuật cho phép máy tính có khả năng đọc, hiểu, diễn giải và tạo ra ngôn ngữ của con người một cách tự động và có ý nghĩa \cite{singh2018natural}. Về mặt phân cấp hệ thống, NLP không hoạt động độc lập mà có mối quan hệ giao thoa chặt chẽ với Học máy (ML) và Học sâu (DL) trong bức tranh tổng thể của Trí tuệ nhân tạo (AI), được mô tả trực quan qua sơ đồ ở Hình 1.1. 
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[width=0.8\textwidth]{VNU Dai hoc Tong hop Ha Noi - 19 Le Thanh Tong.jpeg}
+%	\caption[Đại học Tổng hợp]{Đại học Tổng hợp Hà Nội tại 19 Lê Thánh Tông.}
+%	\label{fig:DHTHHN}
+%\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{1.1.png}
+	\caption{Sơ đồ vị trí và mối quan hệ giao thoa của NLP trong hệ sinh thái AI, ML và DL.}
+	\label{fig:bieudo1}
+\end{figure}
+
+Sự giao thoa được thể hiện rõ nét qua việc các mô hình NLP hiện đại ngày càng dịch chuyển từ hệ thống dựa trên luật cứng nhắc sang việc áp dụng các thuật toán Học máy để tự động khai phá thông tin \cite{singh2018natural}. Ở tầng sâu hơn, các kiến trúc Học sâu đóng vai trò như các bộ lọc mạnh mẽ giúp trích xuất và tối ưu hóa các đặc trưng ngôn ngữ phức tạp mà các phương pháp truyền thống không thể chạm tới \cite{hastie2009elements},\cite{hochreiter1997long} 
+Để hiện thực hóa các mô hình công nghệ này vào thực tế bài toán, đề tài tuân thủ nghiêm ngặt quy trình phát triển một hệ thống NLP chuẩn mực công nghiệp. Quy trình này vận hành theo một vòng lặp khép kín gồm 6 giai đoạn cốt lõi, chia thành 3 phân vùng trách nhiệm lớn như minh họa tại Hình 1.2: 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{1.2.png}
+	\caption{Sơ đồ chu kỳ phát triển toàn diện hệ thống NLP của dự án.}
+	\label{fig:bieudo2}
+\end{figure}
+
+Dựa trên cấu trúc từ Hình 1.2, quy trình phát triển tổng quát điều phối hệ thống qua các phân vùng chức năng sau:
+\begin{itemize}
+\item \textbf{Phân vùng Nghiên cứu (Research)}: Tiến hành thu thập tập dữ liệu văn bản thô (Data collection) , sau đó thực hiện phân tích đặc trưng ngôn ngữ, làm sạch, chuẩn hóa cấu trúc dữ liệu thô và thực nghiệm kiểm thử thuật toán (Analysis \& experimenting).
+
+\item \textbf{Phân vùng Phát triển (Development)}: Đưa ma trận đặc trưng văn bản vào huấn luyện các thuật toán phân lớp cốt lõi (Training) và tiến hành viết mã nguồn, tối ưu hóa các hàm toán học để cấu hình hệ thống (Implementation).
+
+\item \textbf{Phân vùng Vận hành (Operations)}: Đóng gói và triển khai mô hình hoàn chỉnh lên môi trường ứng dụng thực tế (Deploying) , đồng thời thiết lập hệ thống liên tục giám sát sai số, theo dõi độ ổn định của dữ liệu người dùng theo thời gian (Monitoring).
+\end{itemize}
+
+Sự phối hợp nhịp nhàng của chu kỳ phát triển tổng quát này là nền tảng kỹ thuật quyết định để đề tài tiến tới giải quyết bài toán nhận diện sắc thái tinh vi trong văn bản mạng xã hội ở các mục tiếp theo.
+
+\section{Nhận diện cảm xúc trong văn bản}
+
+\subsection{Khái niệm về cảm xúc dưới góc nhìn khoa học}
+
+Trước khi tiếp cận dưới góc độ công nghệ máy tính, cần làm rõ bản chất hệ thống: Cảm xúc là một trạng thái phản ứng sinh lý và tâm lý phức tạp của con người trước các tác nhân kích thích từ môi trường bên ngoài hoặc từ các luồng suy nghĩ nội tại \cite{jurafsky2020speech}. Theo học thuyết tâm lý học kinh điển của Paul Ekman, con người sở hữu một tập hợp gồm 6 trạng thái cảm xúc nền tảng mang tính phổ quát toàn cầu bao gồm: \textit{Vui vẻ (Joy), Buồn bã (Sadness), Giận dữ (Anger), Sợ hãi (Fear), Ngạc nhiên (Surprise), và E ngại/E dè (Disgust)}, được trực quan hóa thông qua hệ thống biểu cảm tương đương tại Hình 1.3 \cite{jurafsky2020speech}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{1.3.png}
+	\caption{Minh họa hệ thống 6 trạng thái cảm xúc nền tảng theo học thuyết Paul Ekman.}
+	\label{fig:bieudo3}
+\end{figure}
+
+Trong tự nhiên, trạng thái tâm lý này của con người được phát tín hiệu và biểu đạt ra thế giới bên ngoài thông qua ba phương thức cốt lõi \cite{jurafsky2020speech}:
+\begin{enumerate}
+	\item \textbf{Phương thức trực quan}: Biểu cảm qua hệ thống cơ mặt (nụ cười, ánh mắt, cái nhíu mày) và các cử chỉ, hành vi của cơ thể.
+	
+	\item \textbf{Phương thức thính giác}: Biểu cảm qua giọng nói, thể hiện bằng các biến thiên về mặt tần số, cao độ, âm lượng, tốc độ và ngữ điệu phát âm.
+	
+	\item \textbf{Phương thức ngôn từ}: Biểu cảm qua văn bản chữ viết, được thể hiện một cách tinh vi thông qua việc lựa chọn từ vựng sắc thái, cấu trúc cú pháp câu, các kỹ thuật châm biếm, hoán dụ, hoặc hệ thống dấu biểu cảm (!, ?) và từ lóng trên các nền tảng số.
+\end{enumerate}
+
+Trong thực tế tương tác hàng ngày và đặc biệt là trên không gian mạng xã hội, các trạng thái tâm lý này không tồn tại đơn lẻ mà liên tục biến đổi, đan xen và mở rộng thành các sắc thái biểu cảm phức tạp hơn (ví dụ: từ \textit{Vui vẻ} phát triển thành \textit{Ngưỡng mộ - Admiration}, \textit{Thích thú - Amusement}, hay \textit{Lòng biết ơn - Gratitude}) \cite{jurafsky2020speech}. Do giới hạn về mặt thu thập dữ liệu kỹ thuật số, đề tài này tập trung khai thác sâu sắc vào phương thức ngôn từ để làm tiền đề cho máy tính tự động trích xuất và phân tích tri thức cảm xúc từ văn bản của người dùng \cite{jurafsky2020speech}. 
+
+\subsection{Bài toán nhận diện cảm xúc từ văn bản}
+
+Nhận diện cảm xúc trong văn bản là một nhánh phát triển chuyên sâu và phức tạp của bài toán Phân tích quan điểm và Khai phá ý kiến trong lĩnh vực xử lý ngôn ngữ tự nhiên \cite{singh2018natural}. Trong khi phân tích quan điểm truyền thống chỉ dừng lại ở việc phân loại tính phân cực tài liệu theo các hướng thô như Tích cực (Positive), Tiêu cực (Negative), hoặc Trung tính (Neutral), thì nhận diện cảm xúc hướng tới việc bóc tách các trạng thái tâm lý tinh vi, có chiều sâu hơn của con người (ví dụ: giận dữ, biết ơn, lo lắng, hay ngưỡng mộ).
+
+Dữ liệu văn bản trên mạng xã hội và các diễn đàn trực tuyến như Reddit phản ánh chân thực trạng thái tâm lý thời gian thực của người dùng, tạo ra nguồn tài nguyên khép kín cho các bài toán phân tích xã hội và chăm sóc khách hàng \cite{singh2018natural}. Tuy nhiên, việc máy tính tự động nhận diện cảm xúc từ các chuỗi ký tự thô đối mặt với những thách thức học máy rất lớn \cite{singh2018natural}:
+\begin{itemize}
+\item \textbf{Sự mơ hồ và ẩn dụ của ngôn từ}: Con người thường không biểu lộ cảm xúc một cách trực diện qua các từ khóa cố định mà lồng ghép qua các cấu trúc châm biếm, hoán dụ, hoặc ẩn dụ ngữ cảnh \cite{singh2018natural}.
+
+\item \textbf{Đặc thù ngôn ngữ mạng xã hội}: Các văn bản thu thập được thường rất ngắn, cấu trúc ngữ pháp lỏng lẻo, viết tắt tự do và thay đổi liên tục theo xu hướng, làm suy giảm nghiêm trọng hiệu năng của các bộ trích xuất đặc trưng truyền thống \cite{singh2018natural}.
+\end{itemize}
+
+Chính vì vậy, việc chuyển hóa các chuỗi chữ thô mang sắc thái biểu cảm thành các không gian vectơ toán học, sau đó áp dụng các thuật toán học máy và học sâu để phân lớp ngữ cảnh là chìa khóa cốt lõi để máy tính có thể "thấu cảm" được văn bản của con người \cite{hastie2009elements},\cite{singh2018natural},\cite{hochreiter1997long}.
+
+\section{Bài toán phân loại đa nhãn}
+
+Trong các bài toán học máy phân loại truyền thống (Single-label Classification), mỗi mẫu dữ liệu đầu vào chỉ được phép ánh xạ duy nhất tới một nhãn lớp độc nhất loại trừ lẫn nhau (ví dụ: phân loại đa lớp tích cực, tiêu cực hoặc trung tính). Tuy nhiên, ngôn ngữ trên mạng xã hội phản ánh nội tâm phức tạp của con người, nơi một câu nói có thể chứa đựng đồng thời nhiều trạng thái tâm lý đan xen \cite{demszky2020goemotions}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{1.5.png}
+	\caption{Ví dụ minh họa về văn bản một nhãn và đa nhãn cảm xúc.}
+	\label{fig:bieudo1.5}
+\end{figure}
+
+Do đó, đề tài này tiếp cận Bài toán Phân loại Đa nhãn (Multi-label Classification) \cite{demszky2020goemotions}. Về mặt toán học, cho trước một không gian văn bản đầu vào $x$ và một tập hợp gồm $L$ nhãn cảm xúc độc lập $Y = \{Y_1, Y_2, \dots, Y_L\}$. Mục tiêu của mô hình là học một hàm quyết định $h(x)$ để dự đoán ra một vectơ đầu ra dạng nhị phân $\hat{y} = [\hat{y_1}, \hat{y_2}, \dots, \hat{y_L}] \in \{0, 1\}^L$ trong đó $\hat{y_j} = 1$ nếu mô hình nhận diện văn bản chứa sắc thái cảm xúc thứ $j$, và bằng 0 trong trường hợp ngược lại. Lúc này, các nhãn cảm xúc không còn loại trừ lẫn nhau, cho phép một bình luận có thể được gán đồng thời nhiều nhãn như vừa "\textit{admiration}" (ngưỡng mộ) vừa "\textit{joy}" (vui sướng) \cite{demszky2020goemotions}.
+
+%----------------------------------------------------------------------------------------
+
+\section{Kiến trúc tổng quan của dự án}
+
+Để giải quyết bài toán phân loại đa nhãn cảm xúc từ văn bản mạng xã hội, đề tài xây dựng và triển khai hệ thống dựa trên một quy trình xử lý dữ liệu học máy chuẩn mực. Kiến trúc tổng quan của dự án bao gồm các khối chức năng cốt lõi được điều phối tuần tự theo sơ đồ minh họa ở Hình 1.5.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{1.4.png}
+	\caption{Sơ đồ kiến trúc luồng xử lý dữ liệu và huấn luyện hệ thống.}
+	\label{fig:bieudo4}
+\end{figure}
+
+Dựa trên cấu trúc mô hình hóa từ Hình 1.5, luồng vận hành chi tiết của dự án được đặc tả qua 5 giai đoạn chính sau:
+\begin{itemize}
+\item Tập dữ liệu và Tiền xử lý dữ liệu: Hệ thống tiếp nhận tập dữ liệu thô GoEmotions gồm các bình luận từ nền tảng Reddit \cite{demszky2020goemotions}. Do đặc thù ngôn ngữ mạng xã hội chứa nhiều nhiễu, các chuỗi văn bản sẽ được đi qua hàm tiền xử lý nâng cao nhằm chuẩn hóa bảng mã, khai triển từ viết tắt, xử lý cấu trúc phủ định và lemmatize đưa từ về dạng nguyên thể.
+
+\item Trích xuất đặc trưng: Các văn bản sau khi làm sạch hoàn toàn sẽ được số hóa thành các vectơ toán học. Giai đoạn này thực hiện thực nghiệm và trích xuất đặc trưng dựa trên phương pháp thống kê TF-IDF kết hợp với các kỹ thuật nhúng từ không gian liên tục như Word2Vec và FastText \cite{singh2018natural},\cite{mikolov2013efficient}.
+
+\item Phân chia dữ liệu thực nghiệm: Sau khi ma trận đặc trưng được hình thành, dữ liệu sẽ được phân tách độc lập thành hai tập con:
+\begin{itemize}
+\item[$\circ$] Dữ liệu huấn luyện (Training set): Chiếm tỷ lệ lớn (ví dụ: 80\%), phục vụ cho quá trình học các đặc trưng cảm xúc của các thuật toán.
+
+\item[$\circ$] Dữ liệu đánh giá (Validation/Test set): Chiếm tỷ lệ còn lại (ví dụ: 20\%), được giữ hoàn toàn độc lập để kiểm thử và đánh giá khách quan năng lực phân loại của hệ thống.
+\end{itemize}
+\item Huấn luyện mô hình: Tập dữ liệu huấn luyện được đưa vào các thuật toán phân loại cốt lõi (bao gồm Logistic Regression, Random Forest, LinearSVC, CNN, LSTM) để tối ưu hóa hệ thống trọng số. Quá trình này giúp chuyển đổi các thuật toán từ dạng "Mô hình" lý thuyết ban đầu trở thành một "Mô hình đã huấn luyện" mang đầy đủ tri thức phân lớp.
+
+\item Phân loại đầu ra: Mô hình đã huấn luyện sẽ tiếp nhận tập dữ liệu đánh giá, tính toán và đưa ra kết quả dự đoán nhãn cảm xúc dưới dạng một vectơ nhị phân đa nhãn, hoàn thành mục tiêu nhận diện đồng thời các trạng thái tâm lý đan xen trong văn bản người dùng.
+\end{itemize}
+
+

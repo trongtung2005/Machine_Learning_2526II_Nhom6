@@ -1,0 +1,379 @@
+% Chương 2
+
+\chapter{CƠ SỞ LÝ THUYẾT} % Tên của chương
+
+\label{Chapter2} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{Chapter2} 
+
+%----------------------------------------------------------------------------------------
+
+\section{Các phương pháp biểu diễn văn bản}
+
+Trong lĩnh vực xử lý ngôn ngữ tự nhiên (NLP), máy tính không thể trực tiếp tiếp nhận và tính toán trên các chuỗi ký tự hay từ vựng thô dạng văn bản \cite{singh2018natural}. Do đó, biểu diễn văn bản là quá trình ánh xạ các đơn vị ngôn ngữ (từ, cụm từ hoặc toàn bộ văn bản) thành các vectơ số thực trong không gian toán học \cite{singh2018natural}. Hiệu năng của các mô hình phân loại cảm xúc phụ thuộc rất lớn vào khả năng lưu giữ thông tin ngữ nghĩa và cú pháp của phương pháp biểu diễn dữ liệu đầu vào này \cite{singh2018natural},\cite{mikolov2013efficient}.
+
+\subsection{Phương pháp TF - IDF}
+
+TF-IDF là một kĩ thuật phổ biến được sử dụng trong nhiều bài toán NLP và khai phá dữ liệu dạng văn bản nhằm mục đích tính toán trọng số (độ quan trọng) của một từ trong một văn bản cụ thể, khi văn bản đó nằm trong một tập hợp nhiều văn bản khác nhau (corpus) \cite{singh2018natural}.
+
+TF-IDF giúp chuyển đổi dạng biểu diễn văn bản thô thành dạng không gian vectơ (VSM) hoặc thành những vectơ thưa thớt (sparse vectors) phục vụ cho các mô hình tính toán \cite{singh2018natural}. Kỹ thuật này giúp làm tăng giá trị trọng số tỷ lệ thuận với số lần xuất hiện của từ trong văn bản, nhưng lại tỷ lệ nghịch với tần suất từ đó xuất hiện trên toàn bộ tập dữ liệu đầu vào \cite{singh2018natural}. 
+
+Kỹ thuật này được cấu thành từ hai chỉ số thành phần:
+\begin{itemize}
+\item \textbf{TF (Term Frequency)}: Tần suất xuất hiện của một từ trong một đoạn văn bản. Khi tính toán độc lập, mức độ quan trọng của các từ là như nhau \cite{singh2018natural}. 
+
+\item \textbf{IDF (Inverse Document Frequency)}: Được dùng để đánh giá mức độ quan trọng của một từ trên toàn tập dữ liệu. Do trong văn bản thường xuất hiện nhiều từ không quan trọng xuất hiện với tần suất cao (ví dụ: stop words), IDF được sử dụng để làm giảm đi mức độ quan trọng của các từ đó \cite{singh2018natural}. 
+\end{itemize}
+Công thức xác định các thành phần của TF-IDF được cho bởi:
+\begin{equation}
+	TF_i = \frac{n_i}{N_i}
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+	\item $i$: $1 \dots D$.
+	\item $n_i$: Tần số xuất hiện của từ trong văn bản $i$.
+	\item $N_i$: Tổng số từ trong văn bản $i$.
+\end{itemize}
+\begin{equation}
+	IDF_i = \log(\frac{D}{d})
+\end{equation}
+
+Trong đó:
+\begin{itemize}
+	\item D: Tổng số document trong tập dữ liệu
+	\item d: Số lượng document có sự xuất hiện của từ
+\end{itemize}
+
+Khi đó TD - IDF tổng hợp cuối cùng:
+\begin{equation}
+	TF_i - IDF_i = TF_i\times{IDF_i}
+\end{equation}
+
+\subsection{Phương pháp Word2Vec}
+
+Word2Vec là một kỹ thuật biểu diễn từ vựng dưới dạng các vectơ số thực trong không gian liên tục, được đề xuất bởi nhóm nghiên cứu Google Brain do Mikolov và cộng sự phát triển năm 2013 \cite{mikolov2013efficient}. Khác với các phương pháp biểu diễn rời rạc như TF-IDF, Word2Vec ánh xạ các từ có ngữ nghĩa tương đồng tới các vị trí gần nhau trong không gian vectơ nhiều chiều, từ đó cho phép mô hình học máy khai thác được mối quan hệ ngữ nghĩa giữa các từ \cite{mikolov2013efficient}.
+
+Ý tưởng cốt lõi của Word2Vec dựa trên giả thuyết phân bố trong ngôn ngữ học, cho rằng những từ xuất hiện trong các ngữ cảnh tương tự thường mang ý nghĩa tương tự nhau \cite{mikolov2013efficient}. Thông qua quá trình huấn luyện trên một tập văn bản lớn, mô hình học được các biểu diễn vectơ có khả năng phản ánh cả đặc trưng ngữ nghĩa và cú pháp của từ vựng \cite{mikolov2013efficient}.
+
+Word2Vec sử dụng mạng nơ-ron nông gồm một lớp ẩn để học biểu diễn từ và được triển khai theo hai kiến trúc chính \cite{mikolov2013efficient}:
+\begin{itemize}
+\item \textbf{Continuous Bag-of-Words (CBOW)}: Mô hình sử dụng các từ ngữ cảnh xung quanh để dự đoán từ trung tâm. Phương pháp này có tốc độ huấn luyện nhanh và phù hợp với các tập dữ liệu lớn \cite{mikolov2013efficient}.
+
+\item \textbf{Skip-Gram}: Mô hình thực hiện quá trình ngược lại, sử dụng từ trung tâm để dự đoán các từ ngữ cảnh xung quanh. Skip-Gram thường cho kết quả tốt hơn đối với các từ xuất hiện ít và có khả năng học biểu diễn ngữ nghĩa chính xác hơn CBOW, tuy nhiên chi phí tính toán cao hơn \cite{mikolov2013efficient}.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{2.1}
+	\caption{Mô hình CBOW và Skip-Gram.}
+	\label{fig:bieudo5}
+\end{figure}
+
+Một ưu điểm quan trọng của Word2Vec là khả năng biểu diễn mối quan hệ ngữ nghĩa giữa các từ thông qua các phép toán trên vectơ. Ví dụ, các từ mang ý nghĩa gần nhau như happy, glad và joyful sẽ có các vectơ nằm gần nhau trong không gian đặc trưng. Điều này giúp các mô hình học máy và học sâu khai thác được thông tin ngữ nghĩa mà các phương pháp thống kê truyền thống như TF-IDF khó có thể biểu diễn đầy đủ \cite{mikolov2013efficient}.
+
+Trong phạm vi đề tài, Word2Vec đóng vai trò là một phương pháp biểu diễn văn bản sử dụng trong các phương pháp học sâu CNN và LSTM.
+
+\section{Các mô hình học máy}
+
+\subsection{Logistic Regression}
+\subsubsection{Logistic Regression}
+
+Hồi quy Logistic là một thuật toán học máy phân loại mang tính thống kê, được sử dụng để dự đoán xác suất của một biến phụ thuộc phụ thuộc vào các biến độc lập đầu vào \cite{hastie2009elements}. Mặc dù bản chất ban đầu dùng cho bài toán phân loại nhị phân, thuật toán này có thể mở rộng hiệu quả cho bài toán phân loại đa nhãn (Multi-label Classification) thông qua chiến lược Một-đối-Tất cả (One-vs-Rest) \cite{hastie2009elements}
+
+\subsubsection{Hàm Sigmoid và cơ chế kích hoạt xác suất}
+
+Để chuyển đổi giá trị đầu ra tuyến tính thành một giá trị xác suất nằm trong khoảng (0, 1), thuật toán sử dụng hàm Sigmoid được định nghĩa qua công thức:
+\begin{equation}
+	g(z) = \frac{1}{1 + e^{-z}}
+\end{equation}
+
+Trong đó, z là tổ hợp tuyến tính của các đặc trưng đầu vào x và hệ thống trọng số w cùng sai số b:
+\begin{equation}
+	z = w^T x + b = w_1 x_1 + w_2 x_2 + \dots + w_n x_n + b
+\end{equation}
+
+Các thành phần trong phương trình:
+\begin{itemize}
+	\item $x = [x_1, x_2, \dots, x_n]^T$: Vector chứa các đặc trưng đầu vào (features).
+	\item $w = [w_1, w_2, \dots, w_n]^T$: Vector chứa các trọng số (weights) thể hiện mức độ đóng góp của từng đặc trưng.
+	\item $b$: Thành phần sai số hệ thống (bias).
+\end{itemize}
+
+Đặc điểm hình học và toán học của hàm Sigmoid:
+\begin{itemize}
+	\item Khi $z \to \infty \implies e^{-z} \to 0 \implies g(z) \to 1$
+	
+	\item Khi $z \to -\infty \implies e^{-z} \to +\infty \implies g(z) \to 0$
+	
+	\item Khi $z = 0 \implies e^0 = 1 \implies g(z) = 0.5$
+\end{itemize}
+
+Nhờ đường cong mượt mà có hình chữ S, hàm Sigmoid nén toàn bộ không gian số thực vào miền giá trị (0,1). Giá trị đầu ra này được diễn giải trực tiếp thành xác suất điều kiện để mẫu dữ liệu đầu vào thuộc về lớp tích cực (lớp 1):
+
+$P(y = 1|x) = g(z)$
+
+$P(y = 0|x) = 1 - g(z)$
+
+\textbf{Hàm mất mát (Binary Cross-Entropy Loss):} Để tối ưu hóa các trọng số trong quá trình huấn luyện bài toán phân loại đa nhãn, hàm mất mát Entropi chéo nhị phân được áp dụng độc lập cho từng nhãn lớp $j$ \cite{hastie2009elements}:
+
+$$
+\mathcal{L}({w}) = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]
+$$
+
+Trong đó, $N$ là tổng số mẫu huấn luyện, $y_i \in \{0, 1\}$ là nhãn thực tế và $\hat{y}_i = \sigma(z_i)$ là xác suất dự đoán của mô hình \cite{hastie2009elements}.
+
+\subsubsection{Sự tương quan mềm dẻo}
+
+Khái niệm "sự tương quan mềm dẻo" trong Hồi quy Logistic thể hiện qua cách mô hình thiết lập ranh giới phân lớp dựa trên lý thuyết xác suất, thay vì đưa ra các lát cắt cứng nhắc (hard thresholding) như một số thuật toán phân loại dạng cây quyết định hoặc thuật toán Perceptron truyền thống cổ điển \cite{hastie2009elements}.
+\begin{itemize}
+\item \textbf{Biểu diễn Log-Odds tuyến tính}: Hồi quy Logistic giả định rằng logarit của tỷ số khả năng (log-odds hay giá trị logit) có mối tương quan tuyến tính biến thiên liên tục với các đặc trưng độc lập \cite{hastie2009elements}. Công thức log-odds được xác định qua biểu thức:
+$$
+\ln \left( \frac{P(y = 1 \mid \mathbf{x})}{1 - P(y = 1 \mid \mathbf{x})} \right) = \mathbf{w}^T \mathbf{x} + b
+$$
+
+Mối tương quan này giúp mô hình giữ được bản chất toán học tuyến tính đơn giản ở không gian log-odds, nhưng lại tạo ra một ranh giới chuyển đổi cực kỳ mượt mà, uyển chuyển ở không gian xác suất thực tế \cite{hastie2009elements}.
+
+\item \textbf{Ranh giới quyết định mềm (Soft Decision Boundary)}: Thay vì chỉ khẳng định tuyệt đối một mẫu dữ liệu thuộc lớp nào, mô hình cung cấp mức độ tự tin thông qua giá trị xác suất cụ thể \cite{hastie2009elements}. Tại vùng lân cận ranh giới quyết định nơi xác suất tiến gần về vị trí cân bằng (0.5), giá trị xác suất thay đổi tiệm tiến, giúp phản ánh chính xác sự mơ hồ hoặc dữ liệu nhiễu tại vùng biên của ngôn ngữ mạng xã hội \cite{hastie2009elements}.
+\end{itemize}
+
+Sự mềm dẻo này cho phép người vận hành linh hoạt thay đổi ngưỡng phân loại (classification threshold - mặc định là 0.5 để tối ưu hóa mô hình theo các mục tiêu nhiệm vụ khác nhau, như ưu tiên giảm thiểu sai sót loại 1 (False Positive) hoặc sai sót loại 2 (False Negative) \cite{hastie2009elements}
+
+\subsection{Random Forest}
+
+\subsubsection{Học tổ hợp (Ensemble Learning)}
+
+Học tổ hợp là một kỹ thuật nâng cao trong học máy, thực hiện kết hợp dự đoán từ nhiều mô hình thành phần (base models hoặc weak learners) để tạo ra một mô hình tổng hợp duy nhất có hiệu suất tối ưu hơn \cite{hastie2009elements}. Mục tiêu cốt lõi của học tổ hợp là tận dụng "trí tuệ tập thể" nhằm giảm thiểu sai số do phương sai lớn (overfitting/quá khớp) hoặc độ chệch lớn (underfitting/chưa khớp), từ đó nâng cao độ chính xác và khả năng khái quát hóa của mô hình trên dữ liệu thực tế \cite{hastie2009elements}.
+
+\subsubsection{Cơ chế bỏ phiếu số đông}
+
+Bỏ phiếu số đông là một cơ chế tích hợp kết quả đầu ra được sử dụng phổ biến trong các bài toán phân loại (classification) của học tổ hợp.
+
+Cách thức hoạt động: Trong cấu trúc này, mỗi mô hình dự đoán thành phần sẽ hoạt động độc lập và đưa ra một lựa chọn nhãn lớp (class label) cụ thể cho mẫu dữ liệu đầu vào. Hệ thống sẽ tiến hành đếm số lượng phiếu bầu cho từng nhãn lớp. Nhãn lớp nào nhận được số lượng phiếu bầu lớn nhất (chiếm đa số) từ các mô hình thành phần sẽ được chọn làm kết quả dự đoán cuối cùng của toàn bộ hệ thống tổ hợp.
+
+Ví dụ: Giả sử một hệ thống gồm 3 mô hình độc lập thực hiện phân loại một hình ảnh. Mô hình 1 và Mô hình 2 dự đoán kết quả là lớp "Mèo", mô hình 3 dự đoán kết quả là lớp "Chó". Theo cơ chế Hard Voting, lớp "Mèo" nhận được 2/3 số phiếu và được chọn làm kết quả cuối cùng. Cơ chế này khác với Soft Voting (kết hợp dựa trên việc tính trung bình xác suất dự đoán của các lớp).
+
+\subsubsection{Decision Tree}
+
+Khi xây dựng cây quyết định, thuật toán sẽ lặp qua tất cả các đặc trưng và tính toán chỉ số độ lợi thông tin (Information Gain) cho mỗi đặc trưng, sau đó chọn các đặc trưng có Information Gain cao nhất để phân chia dữ liệu tại nút (node) hiện tại \cite{hastie2009elements}.
+
+Information Gain đo lường sự giảm Entropy (độ hỗn loạn/độ không chính xác) của dữ liệu sau khi được phân chia bởi một đặc trưng cụ thể, thể hiện qua công thức:
+$$
+\text{Gain}(D, A) = \text{Entropy}(D) - \sum_{v \in \text{Values}(A)} \frac{|D_v|}{|D|} \text{Entropy}(D_v)
+$$
+
+Entropy càng thấp tức là dữ liệu càng được phân loại một cách chính xác và có độ thuần túy (purity) cao \cite{hastie2009elements}.
+
+\subsubsection{Random Forest}
+
+Random Forest là một thuật toán học máy linh hoạt khi được sử dụng cho các bài toán phân loại, dự đoán giá trị hồi quy tuyến tính và các tác vụ đa đầu ra. Ý tưởng của RF là sử dụng một tập hợp Decision Tree (Cây quyết định), mỗi phân loại được huấn luyện trên các phần khác nhau của tập dữ liệu. Sau đó RF sẽ lấy kết quả phân loại dựa trên các cây phân loại.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{2.2.png}
+	\caption{Mô hình Random Forest.}
+	\label{fig:bieudo6}
+\end{figure}
+
+Thay vì sử dụng tất cả các đặc trưng để xây dựng cây quyết định, Random Forest sẽ chọn một số lượng ngẫu nhiên các đặc trưng để xem xét tại mỗi node.
+
+Cơ chế hoạt động chi tiết của Random Forest:
+\begin{itemize}
+\item \textbf{Tạo mẫu ngẫu nhiên (Bootstrapping)}: Từ bộ dữ liệu huấn luyện gốc, tạo ra nhiều tập con dữ liệu bằng cách lấy mẫu ngẫu nhiên với phép lặp (có thể lấy lại một phần tử đã chọn) \cite{hastie2009elements}. Khi tập mẫu được rút ra từ một tập huấn luyện của một cây với sự thay thế (bagging), thì theo ước tính có khoảng 1/3 các phần tử không nằm trong mẫu này \cite{hastie2009elements}. Điều này có nghĩa là chỉ có khoảng 2/3 các phần tử trong tập huấn luyện tham gia vào trong các tính toán của chúng ta, và 1/3 các phần tử này được gọi là dữ liệu ngoài bao (out-of-bag - OOB) \cite{hastie2009elements}. Dữ liệu out-of-bag được sử dụng để ước lượng lỗi tạo ra từ việc kết hợp các kết quả từ các cây tổng hợp trong Random Forest cũng như dùng để ước tính độ quan trọng thuộc tính (variable importance) \cite{hastie2009elements}.
+
+\item \textbf{Xây dựng cây quyết định (Decision Tree)}:
+\begin{itemize}
+	\item [$\circ$] Chọn Ngẫu Nhiên Các Đặc Trưng (Feature Selection): Tại mỗi nút của cây, chọn ngẫu nhiên một tập hợp con nhỏ các đặc trưng để tìm ra đặc trưng tốt nhất để chia nhánh. Điều này giúp giảm tương quan giữa các cây quyết định [1].
+	\item [$\circ$] Chia Dữ Liệu: Sử dụng tiêu chí như Gini impurity hoặc thông tin entropy để tính toán Information Gain và tìm ra cách chia tốt nhất dựa trên các đặc trưng đã chọn \cite{hastie2009elements}.
+	\item [$\circ$] Quá trình lặp: Lặp lại quá trình tạo mẫu ngẫu nhiên và xây dựng cây quyết định cho đến khi đạt được số lượng cây quyết định mong muốn trong rừng \cite{hastie2009elements}.
+\end{itemize}
+\item \textbf{Voting hoặc Averaging}: Khi thực hiện dự đoán, Random Forest sử dụng phương pháp voting (bỏ phiếu - áp dụng cơ chế Hard Voting hoặc Soft Voting trong trường hợp phân loại) hoặc averaging (tính trung bình trong trường hợp hồi quy) từ các cây thành viên \cite{hastie2009elements}. Điều này giúp tạo ra một mô hình tổng hợp mạnh mẽ và giảm phương sai (variance) \cite{hastie2009elements}.
+\end{itemize}
+
+\subsection{Support Vector Machine (Linear SVC)}
+
+\subsubsection{Tổng quan về Support Vector Machine (Linear SVC)}
+
+Support Vector Machine (SVM) là một thuật toán học máy có giám sát mạnh mẽ, được ứng dụng rộng rãi cho cả bài toán phân loại và hồi quy. Trong đó, LinearSVC (Linear Support Vector Classification) là một biến thể cụ thể của SVM, được thiết kế tối ưu để giải quyết các bài toán phân loại tuyến tính. Mục tiêu cốt lõi của LinearSVC không chỉ đơn thuần là tìm ra một ranh giới phân chia các lớp dữ liệu, mà là tìm ra một ranh giới "tốt nhất" - mang lại khả năng tổng quát hóa cao nhất trên các dữ liệu chưa từng quan sát.
+
+\subsubsection{Khái niệm siêu phẳng (Hyperplane)}
+
+Trong không gian học máy, ranh giới phân chia các lớp dữ liệu được gọi là một Siêu phẳng (Hyperplane) \cite{hastie2009elements}. Hình dạng và số chiều của siêu phẳng phụ thuộc trực tiếp vào số lượng đặc trưng (features) của tập dữ liệu \cite{hastie2009elements}: Trong không gian 2 chiều (dữ liệu có 2 đặc trưng), siêu phẳng là một đường thẳng \cite{hastie2009elements}. Trong không gian 3 chiều (dữ liệu có 3 đặc trưng), siêu phẳng là một mặt phẳng \cite{hastie2009elements}. Trong không gian n chiều (với n > 3), siêu phẳng là một không gian con có n-1 chiều \cite{hastie2009elements}. Về mặt toán học, phương trình tổng quát của một siêu phẳng phân tách tuyến tính được định nghĩa là \cite{hastie2009elements}:
+$$
+w^T x + b = 0
+$$
+
+Trong đó:
+\begin{itemize}
+\item $w$: Vectơ pháp tuyến (trọng số) xác định hướng của siêu phẳng.
+
+\item $x$: Vector đặc trưng của điểm dữ liệu đầu vào.
+
+\item $b$: Sai số (bias) xác định vị trí của siêu phẳng so với gốc tọa độ.
+\end{itemize}
+
+Mô hình sẽ phân loại một điểm dữ liệu mới bằng cách đưa giá trị $x$ vào phương trình \cite{hastie2009elements}. Nếu $w^T x + b > 0$, điểm dữ liệu thuộc về một lớp (ví dụ: +1); ngược lại, nếu $w^T x + b < 0$, nó thuộc về lớp kia (ví dụ: -1) \cite{hastie2009elements}.
+
+\subsubsection{Tối đa hóa khoảng cách (Max-Margin) và Support Vectors}
+
+Điều làm nên sự khác biệt và sức mạnh của SVM chính là cơ chế Tối đa hóa khoảng cách (Max-Margin) \cite{hastie2009elements}. Trong một tập dữ liệu phân tách tuyến tính được, có thể tồn tại vô số siêu phẳng đi qua giữa hai lớp \cite{hastie2009elements}. Tuy nhiên, SVM chọn siêu phẳng sao cho khoảng cách (margin) từ siêu phẳng đó đến các điểm dữ liệu gần nhất của cả hai lớp là lớn nhất \cite{hastie2009elements}. Support Vectors (Vectơ hỗ trợ): Là các điểm dữ liệu nằm gần siêu phẳng phân tách nhất \cite{hastie2009elements}. Đây là những điểm cực kỳ quan trọng vì nếu loại bỏ hoặc di chuyển các điểm này, vị trí của siêu phẳng sẽ thay đổi \cite{hastie2009elements}. Các điểm dữ liệu nằm xa ranh giới không có bất kỳ ảnh hưởng nào đến việc xây dựng mô hình \cite{hastie2009elements}. Margin (Biên phân cực): Là khoảng cách giữa hai siêu phẳng biên song song với siêu phẳng ranh giới và đi qua các Support Vectors \cite{hastie2009elements}. Phương trình của hai siêu phẳng biên này thường được chuẩn hóa thành \cite{hastie2009elements}:
+$$ w^T x + b = 1 $$
+$$ w^T x + b = -1 $$
+
+Khoảng cách hình học giữa hai biên này được tính toán bằng công thức:
+$$
+Margin = \frac{2}{||w||}
+$$
+
+Để đạt được khoảng cách (margin) cực đại, thuật toán SVM cần phải tối thiểu hóa độ chuẩn (norm) của vectơ trọng số ||w||, đồng thời phải thỏa mãn điều kiện ràng buộc toán học là tất cả các điểm dữ liệu phải nằm đúng phía của biên phân loại \cite{hastie2009elements}:
+$$
+y_i (w^T x_i + b) \ge 1 \quad \forall i
+$$
+
+Việc tối đa hóa lề (max-margin) giúp mô hình LinearSVC xây dựng được một ranh giới quyết định an toàn nhất, tạo ra khoảng đệm đủ lớn để hấp thụ các nhiễu loạn trong dữ liệu thực tế, từ đó giảm thiểu đáng kể nguy cơ quá khớp (overfitting) và duy trì sự ổn định của hệ thống \cite{hastie2009elements}.
+
+\section{Các mô hình học sâu}
+
+\subsection{CNN}
+
+Mạng thần kinh tích chập (CNN - Convolution Neural Network) là một loại mô hình học sâu, cụ thể là một loại thuật toán học sâu rất phù hợp để phân tích dữ liệu trực quan. CNN - đôi khi được gọi là mạng convnet - sử dụng các nguyên tắc từ đại số tuyến tính, đặc biệt là các phép toán tích chập, để trích xuất các đặc điểm và xác định các mẫu trong hình ảnh. Mặc dù CNN chủ yếu được sử dụng để xử lý hình ảnh nhưng chúng cũng có thể được điều chỉnh để hoạt động với âm thanh và dữ liệu tín hiệu khác.
+
+\subsubsection{Cấu trúc của CNN}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{2.3}
+	\caption{Kiến trúc của CNN.}
+	\label{fig:bieudo7}
+\end{figure}
+
+Một CNN thường bao gồm một số lớp, có thể được phân loại thành ba nhóm: lớp tích chập, lớp gộp và lớp được kết nối đầy đủ. Khi dữ liệu đi qua các lớp này, độ phức tạp của CNN tăng lên, cho phép CNN liên tục xác định các phần lớn hơn của hình ảnh và nhiều tính năng trừu tượng hơn.
+
+\textbf{Convolution Layer (Lớp tích chập)}
+\begin{itemize}
+	\item Lớp tích chập là khối xây dựng cơ bản của CNN và là nơi diễn ra phần lớn các phép tính. Lớp này sử dụng bộ lọc hoặc hạt nhân - một ma trận trọng số nhỏ - để di chuyển qua trường tiếp nhận của hình ảnh đầu vào nhằm phát hiện sự hiện diện của các tính năng cụ thể.
+	\item Quá trình bắt đầu bằng cách trượt hạt nhân theo chiều rộng và chiều cao của hình ảnh, cuối cùng quét toàn bộ hình ảnh qua nhiều lần lặp. Tại mỗi vị trí, một tích số chấm được tính giữa trọng số của hạt nhân và giá trị pixel của hình ảnh bên dưới hạt nhân. Điều này biến đổi hình ảnh đầu vào thành một tập hợp các bản đồ đặc trưng hoặc các đặc điểm phức tạp, mỗi đặc điểm thể hiện sự hiện diện và cường độ của một đặc điểm nhất định tại các điểm khác nhau trong hình ảnh.
+	\item CNN thường bao gồm nhiều lớp chập xếp chồng lên nhau. Thông qua kiến trúc phân lớp này, CNN diễn giải dần dần thông tin hình ảnh có trong dữ liệu hình ảnh thô. Trong các lớp trước, CNN xác định các đặc điểm cơ bản như cạnh, kết cấu hoặc màu sắc. Các lớp sâu hơn nhận đầu vào từ bản đồ đặc trưng của các lớp trước, cho phép chúng phát hiện các mẫu, vật thể và cảnh phức tạp hơn.
+\end{itemize}
+
+\textbf{Pooling Layer (Lớp gộp)}
+\begin{itemize}
+	\item Lớp gộp của CNN là một thành phần quan trọng theo sau lớp tích chập. Tương tự như lớp tích chập, các hoạt động của lớp gộp liên quan đến quá trình quét trên hình ảnh đầu vào, nhưng chức năng của nó thì khác.
+	\item Lớp tổng hợp nhằm mục đích giảm tính chiều của dữ liệu đầu vào trong khi vẫn giữ lại thông tin quan trọng, do đó cải thiện hiệu quả tổng thể của mạng. Điều này thường đạt được thông qua việc lấy mẫu xuống: giảm số lượng điểm dữ liệu trong đầu vào.
+	\item Đối với CNN, điều này thường có nghĩa là giảm số lượng pixel được sử dụng để thể hiện hình ảnh. Hình thức gộp phổ biến nhất là gộp tối đa, giữ lại giá trị tối đa trong một cửa sổ nhất định (tức là kích thước hạt nhân) trong khi loại bỏ các giá trị khác. Một kỹ thuật phổ biến khác, được gọi là gộp trung bình, có cách tiếp cận tương tự nhưng sử dụng giá trị trung bình thay vì giá trị tối đa.
+	\item Việc lấy mẫu xuống làm giảm đáng kể tổng số tham số và tính toán. Ngoài việc nâng cao hiệu quả, điều này còn tăng cường khả năng khái quát hóa của mô hình. Các mô hình ít phức tạp hơn với các tính năng cấp cao hơn thường ít bị trang bị quá mức – một hiện tượng xảy ra khi một mô hình nhận biết nhiễu và các chi tiết quá cụ thể trong dữ liệu huấn luyện của nó, ảnh hưởng tiêu cực đến khả năng khái quát hóa thông tin mới, chưa được nhìn thấy.
+	\item Việc giảm kích thước không gian của việc biểu diễn có một nhược điểm tiềm ẩn, đó là mất một số thông tin. Tuy nhiên, chỉ học những đặc điểm nổi bật nhất của dữ liệu đầu vào thường là đủ cho các tác vụ như phát hiện đối tượng và phân loại hình ảnh. Fully connected layer.
+\end{itemize}
+
+\textbf{Fully Connected Layer (Lớp kết nối đầy đủ)}
+\begin{itemize}
+	\item Lớp được kết nối đầy đủ đóng một vai trò quan trọng trong các giai đoạn cuối cùng của CNN, nơi nó chịu trách nhiệm phân loại hình ảnh dựa trên các đặc điểm được trích xuất ở các lớp trước đó. Thuật ngữ kết nối đầy đủ có nghĩa là mỗi nơ-ron trong một lớp được kết nối với mỗi nơ-ron ở lớp tiếp theo, cho phép CNN xem xét đồng thời tất cả các tính năng khi đưa ra quyết định phân loại cuối cùng.
+	\item Không phải tất cả các lớp trong CNN đều được kết nối đầy đủ. Bởi vì các lớp được kết nối đầy đủ có nhiều tham số, nên việc áp dụng phương pháp này trên toàn bộ mạng sẽ tạo ra mật độ không cần thiết, làm tăng nguy cơ trang bị quá mức và khiến mạng rất tốn kém khi đào tạo về bộ nhớ và tính toán. Việc giới hạn số lượng các lớp được kết nối đầy đủ sẽ cân bằng hiệu quả tính toán và khả năng khái quát hóa với khả năng tìm hiểu các mẫu phức tạp.
+\end{itemize}
+
+\subsection{LSTM}
+
+Mạng bộ nhớ dài - ngắn (LSTM - Long Short-Term Memory) là một biến thể kiến trúc bậc cao của Mạng nơ-ron hồi quy (RNN). LSTM được thiết kế đặc biệt để khắc phục triệt để vấn đề "triệt tiêu đạo hàm" (vanishing gradient) của RNN truyền thống, mang lại khả năng ghi nhớ và chọn lọc các thông tin phụ thuộc xa trong chuỗi dữ liệu thời gian. Trong lĩnh vực xử lý ngôn ngữ tự nhiên, đặc biệt là nhận diện cảm xúc (thông qua các nghiên cứu thực tiễn như WASSA-2018 và SemEval-2018), LSTM cho thấy sức mạnh vượt trội nhờ khả năng nắm bắt được ngữ cảnh và trật tự từ vựng của cả một câu dài.
+
+Kiến trúc LSTM: Thay vì chỉ có một mạng nơ-ron đơn giản, mỗi ô nhớ (Cell) của LSTM được cấu tạo phức tạp bởi một trạng thái ô (tương đương với luồng bộ nhớ dài hạn) và ba cổng kiểm soát thông tin: cổng quên, cổng đầu vào và cổng đầu ra.
+\begin{itemize}
+	\item Trạng thái ô (Cell State) : lưu trữ trạng thái của một chuỗi, do đó nó có khả năng giữ hoặc quên một số thông tin nhất định.
+	\item Cổng đầu vào (Input Gate): quyết định thông tin mới nào được lưu trữ trong ô.
+	\item Cổng đầu ra (Output Gate): xác định trạng thái ẩn tiếp theo.
+	\item Cổng quên (Forget Gate): quyết định thông tin nào nên bỏ đi hoặc giữ lại.
+\end{itemize}
+
+\textbf{Hoạt động của LSTM}
+
+Giả sử chúng ta có một chuỗi các từ $(w_1, w_2, w_3, \dots, w_n)$ và chúng ta đang xử lý từng từ một trong chuỗi đó. Biểu thị trạng thái của LSTM tại bước thời gian t là $(h_t, C_t)$, trong đó $h_t$ là trạng thái ẩn và $C_t$ là trạng thái ô.
+
+Bước 1: LSTM nhận vectơ đầu vào ($x_t$) và trạng thái trước đó ($h_{t-1}, C_{t-1}$).
+
+Bước 2: Cổng quên ($f_t$) quyết định thông tin nào cần loại bỏ khỏi trạng thái ô. Nó sử dụng vectơ đầu vào và trạng thái ẩn trước đó để tạo một số từ 0 đến 1 cho mỗi số ở trạng thái ô $C_{t-1}$. Giá trị gần 0 nghĩa là thông tin đó sẽ bị loại bỏ, còn giá trị gần 1 nghĩa là thông tin đó sẽ được giữ lại.
+\begin{equation}
+	f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)
+\end{equation}
+
+Bước 3: Cổng đầu vào ($i_t$) quyết định thông tin mới nào sẽ được lưu trữ ở trạng thái ô. Nó có hai phần: Lớp sigmoid được gọi là "lớp cổng đầu vào" quyết định giá trị nào sẽ cập nhật
+\begin{equation}
+	i_t = \sigma(W_i [h_{t-1}, x_t] + b_i)
+\end{equation}
+
+Lớp tanh tạo ra một vectơ gồm các trạng thái ô mới ($\tilde{C}_t$) có thể được thêm vào $C_t$
+\begin{equation}
+	\tilde{C}_t = \tanh(W_c \cdot [h_{t-1}, x_t] + b_c)
+\end{equation}
+
+Bước 4: Cập nhật trạng thái ô cũ ($C_{t-1}$) sang trạng thái ô mới ($C_t$). Trạng thái ô cũ được nhân với $f_t$ để quên đi những điều chúng ta đã quyết định quên trước đó. Sau đó, chúng ta thêm các trạng thái ô mới, được điều chỉnh bởi $i_t$ để tạo ra $C_t$
+\begin{equation}
+	C_t = f_t \cdot C_{t-1} + i_t \cdot \tilde{C}_t
+\end{equation}
+
+Bước 5: Quyết định đầu ra. Đầu tiên, chúng ta chạy một lớp sigmoid để quyết định phần nào của trạng thái ô mà chúng ta sẽ xuất ra. Sau đó, chúng ta đặt trạng thái ô thông qua hàm tanh (để đặt các giá trị nằm trong khoảng từ -1 đến 1) và nhân nó với đầu ra $o_t$, chỉ xuất những phần mà chúng ta quyết định giữ lại.
+\begin{equation}
+	h_t = o_t \cdot \tanh(C_t)
+\end{equation}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{2.4.png}
+	\caption{Mô hình LSTM trong xử lý ngôn ngữ tự nhiên.}
+	\label{fig:bieudo8}
+\end{figure}
+
+LSTM bao gồm bốn phần chính: Đầu vào nhúng từ, mạng di động LSTM, fully connected layer và softmax. Với đầu vào, mỗi ô trong mạng LSTM nhận được một vectơ từ được biểu thị bằng các từ nhúng có dạng $[1\times{n}]$ trong đó $n$ là độ dài cố định của câu. Sau đó, các ô tính toán các giá trị và nhận kết quả dưới dạng vectơ trong mạng di động LSTM. Các vectơ này sẽ được kết nối đầy đủ và các giá trị đầu ra sau đó sẽ chuyển qua hàm softmax để đưa ra phân loại phù hợp cho từng nhãn.
+
+\section{Các chỉ số đánh giá}
+
+Trong bài toán phân loại đa nhãn cảm xúc với 28 trạng thái tâm lý khác nhau, tập dữ liệu thực tế thường xảy ra tình trạng mất cân bằng nghiêm trọng (ví dụ: nhãn "neutral" hoặc "approval" xuất hiện dày đặc, trong khi "grief" hoặc "pride" lại rất hiếm). Do đó, chỉ số Độ chính xác tổng thể (Accuracy) truyền thống không thể phản ánh đúng hiệu năng thực sự của hệ thống. Để có cái nhìn khách quan và toàn diện nhất, đề tài sử dụng tập hợp các chỉ số đánh giá chuyên sâu bao gồm: Precision, Recall và đặc biệt là F1-Score thông qua hai cơ chế tính toán Micro và Macro.
+
+Trước khi định nghĩa các chỉ số, ta xét các giá trị thống kê cơ bản trong Ma trận nhầm lẫn (Confusion Matrix) đối với một nhãn cụ thể:
+\begin{itemize}
+	\item TP (True Positive): Số trường hợp mô hình dự đoán đúng nhãn cảm xúc đó.
+	
+	\item FP (False Positive): Số trường hợp mô hình dự đoán có nhãn cảm xúc đó, nhưng thực tế không phải (Báo động giả).
+	\item FN (False Negative): Số trường hợp nhãn cảm xúc đó thực sự tồn tại, nhưng mô hình lại bỏ sót.
+\end{itemize}
+
+\subsection{Precision (Độ chính xác)}
+
+Tỷ lệ số dự đoán đúng trên tổng số các dự đoán dương tính của mô hình. Trong nhận diện cảm xúc, Precision cao đồng nghĩa với việc khi hệ thống đã gán một nhãn cảm xúc nào đó (ví dụ: \textit{"vui vẻ"}), thì khả năng cao văn bản đó thực sự mang cảm xúc \textit{"vui vẻ"}.
+$$
+Precision = \frac{TP}{TP+FP}
+$$
+
+\subsection{Recall (Độ bao phủ)}
+
+Tỷ lệ số dự đoán đúng trên tổng số các mẫu dương tính thực tế. Chỉ số này đánh giá khả năng "không bỏ sót" của mô hình. Recall cao cho thấy hệ thống có khả năng nhận diện và gom được hầu hết các bình luận có chứa cảm xúc đang xét.
+$$
+Recall = \frac{TP}{TP+FN}
+$$
+
+\subsection{Đánh giá tổng thể hệ thống}
+
+Do hệ thống phải dự đoán cùng lúc 28 nhãn cảm xúc, F1-Score của từng nhãn cần được tổng hợp lại thành một thước đo duy nhất để so sánh hiệu năng giữa các thuật toán (như Logistic Regression, LinearSVC, CNN, LSTM) và để tinh chỉnh siêu tham số. Đề tài sử dụng hai phương pháp tính trung bình:
+\begin{itemize}
+	\item Micro F1-Score: Tính toán tổng số lượng TP, FP, FN trên toàn bộ 28 nhãn rồi mới áp dụng công thức F1. Chỉ số này chịu ảnh hưởng lớn bởi các nhãn đa số. Nếu hệ thống dự đoán tốt các nhãn xuất hiện nhiều, Micro F1 sẽ cao.
+	
+	\item Macro F1-Score: Tính toán chỉ số F1 hoàn toàn độc lập cho từng nhãn cảm xúc, sau đó lấy trung bình cộng của 28 giá trị F1 đó. Phương pháp này coi trọng tất cả các nhãn ngang nhau, bất kể số lượng mẫu của nhãn đó nhiều hay ít.
+\end{itemize}
+
+Trong khuôn khổ của bài toán, Macro F1-Score được lựa chọn làm thước đo tối ưu hóa trọng tâm. Mục tiêu tối thượng của hệ thống không phải là học vẹt các cảm xúc phổ biến, mà là phải có khả năng nhận diện công bằng và nhạy bén với cả những trạng thái tâm lý thiểu số tinh vi nhất.
+
+\subsection{Đường cong học tập (Learning Curve) và cơ chế dừng sớm}
+
+Khác với các thuật toán học máy truyền thống, các mô hình Học sâu (như 1D-CNN và LSTM) tiến hành tối ưu hóa trọng số liên tục qua hàng loạt chu kỳ lặp (Epoch). Do đó, Đường cong học tập (Learning Curve) được sử dụng làm công cụ chuẩn đoán trực quan cốt lõi để giám sát động thái học tập của mạng nơ-ron.
+
+Đường cong học tập biểu diễn sự biến thiên của hai dải thông số chính trên cả tập huấn luyện (Training set) và tập kiểm định (Validation set) qua từng chu kỳ:
+\begin{itemize}
+	\item \textbf{Hàm mất mát (Loss)}: Đối với bài toán phân loại đa nhãn, hàm mất mát nhị phân (Binary Cross-Entropy) thường được theo dõi. Đồ thị lý tưởng sẽ có xu hướng giảm dần, phản ánh sự suy giảm sai số dự đoán của mô hình.
+	
+	\item \textbf{Chỉ số đánh giá (Metric)}: Các chỉ số hiệu năng (như Macro F1-Score) được ghi nhận song song, với kỳ vọng đồ thị sẽ tăng tịnh tiến và duy trì ở trạng thái bão hòa.
+\end{itemize}
+
+Thông qua việc quan sát hình thái của đường cong, sự tương tác giữa dữ liệu và thuật toán được thể hiện qua ba trạng thái cơ bản:
+\begin{itemize}
+	\item \textbf{Chưa khớp (Underfitting)}: Đường cong mất mát của cả hai tập dữ liệu đều neo ở mức cao và không có xu hướng giảm. Điều này cho thấy mạng nơ-ron chưa đủ độ sâu hoặc độ phức tạp để bóc tách được các đặc trưng ngữ nghĩa của văn bản.
+	
+	\item \textbf{Hội tụ lý tưởng (Good Fit)}: Hai đường cong huấn luyện và kiểm định cùng giảm dần và bám sát nhau, tiệm cận về một ngưỡng sai số cực tiểu và ổn định.
+	
+	\item \textbf{Quá khớp (Overfitting)}: Đây là rủi ro đặc biệt nghiêm trọng khi xử lý ngôn ngữ tự nhiên trên các tập dữ liệu mất cân bằng. Tại trạng thái này, đường mất mát trên tập huấn luyện tiếp tục lao dốc (thậm chí tiệm cận 0), nhưng đường mất mát trên tập kiểm định lại chững lại, đảo chiều và tăng vọt. Hiện tượng này khẳng định hệ thống đang "học vẹt" cả những nhiễu loạn vô nghĩa của tập huấn luyện, dẫn đến sự sụp đổ về khả năng khái quát hóa khi gặp dữ liệu thực tế.
+\end{itemize}
+
+Nhằm triệt tiêu rủi ro quá khớp và tối ưu hóa thời gian tính toán, đề tài áp dụng cơ chế \textbf{Dừng sớm (Early Stopping)} kết hợp cùng đường cong học tập. Thay vì ép buộc thuật toán chạy hết một số lượng Epoch cố định định trước, hệ thống sẽ liên tục giám sát đồ thị Validation Loss. Nếu phát hiện hàm mất mát trên tập kiểm định không tiếp tục giảm sau một số chu kỳ chịu đựng (Patience), quá trình huấn luyện sẽ bị ngắt tự động. Thuật toán sẽ quay lui (restore) và trích xuất lại bộ trọng số tại "điểm ngọt" (Sweet spot) – nơi Validation Loss đạt mức thấp nhất, đảm bảo mô hình mang ra kiểm thử là phiên bản mạnh mẽ và khách quan nhất.

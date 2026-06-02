@@ -1,0 +1,204 @@
+% Chương 3
+
+\chapter{THỰC NGHIỆM} % Tên của chương
+
+\label{Chapter3} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{Chapter3} 
+
+%----------------------------------------------------------------------------------------
+
+\section{Phân tích dữ liệu}
+
+\subsection{Khái quát về tập dữ liệu GoEmotions}
+
+Đề tài này tiến hành thực nghiệm trên tập dữ liệu GoEmotions, một trong những bộ dữ liệu gán nhãn thủ công lớn nhất dành cho bài toán nhận diện đa nhãn cảm xúc, được giới thiệu và phát triển bởi các nhà nghiên cứu tại Google \cite{demszky2020goemotions}. Bộ dữ liệu bao gồm tổng cộng 58.009 dòng bình luận tiếng Anh được thu thập từ nền tảng Reddit. Điểm đặc biệt làm nên giá trị của GoEmotions chính là hệ thống phân loại cảm xúc vô cùng chi tiết khi toàn bộ các bình luận được gán nhãn thủ công cho 27 danh mục cảm xúc khác nhau cùng với một nhãn Trung tính, tổng cộng là 28 nhãn \cite{demszky2020goemotions}. Hệ thống phân loại này bao phủ đa dạng các sắc thái tâm lý từ tích cực, tiêu cực cho đến những trạng thái cảm xúc không rõ ràng, đáp ứng hoàn hảo mục tiêu nghiên cứu của đề tài.
+
+Về quy trình xây dựng, dữ liệu thô ban đầu được trích xuất từ các cộng đồng phổ biến trên Reddit trong giai đoạn từ năm 2005 đến tháng 1 năm 2019 \cite{demszky2020goemotions}. Trên thực tế, nền tảng mạng xã hội Reddit vốn nổi tiếng với sự thiên lệch lớn về mặt nhân khẩu học, khi đối tượng đóng góp nội dung chủ yếu nghiêng về người dùng nam trẻ tuổi, dẫn đến việc không phản ánh được sự đa dạng của toàn cầu (Duggan và Smith, 2013) \cite{demszky2020goemotions}. Đồng thời, cấu trúc vận hành của nền tảng này cũng dễ tạo ra sự lệch lạc nghiêm trọng về ngôn từ độc hại và xúc phạm (Mohan và cộng sự, 2017) \cite{demszky2020goemotions}. Do đặc thù đó, nội dung trên Reddit thường được sử dụng để nghiên cứu về chứng trầm cảm (Pirina và Cöltekin, 2018) \cite{demszky2020goemotions}, các hành vi vi phạm nhỏ (Breitfeller và cộng sự, 2019) \cite{demszky2020goemotions}, hay thậm chí nghiên cứu của Yanardag và Rahwan (2018) đã chỉ ra tác động tiêu cực của việc sử dụng dữ liệu Reddit thiên lệch bằng cách huấn luyện thành công một chatbot mang hành vi của "kẻ tâm thần" \cite{demszky2020goemotions}.
+
+Chính vì vậy, để giải quyết những lo ngại này và cho phép xây dựng các mô hình phân loại cảm xúc mang tính đại diện rộng rãi, các tác giả của GoEmotions đã thực hiện một loạt các biện pháp sàng lọc, tiền xử lý dữ liệu nghiêm ngặt nhằm đảm bảo tập dữ liệu cuối cùng không củng cố các định kiến ngôn ngữ chung hoặc cụ thể về mặt cảm xúc \cite{demszky2020goemotions}.
+\begin{itemize}
+	\item \textbf{Giảm thiểu ngôn từ độc hại}: Loại bỏ các subreddit không an toàn (NSFW) và các cộng đồng có trên 10\% bình luận chứa token xúc phạm, người lớn. Các từ chửi thề thông thường được giữ lại vì chúng cốt lõi để mô hình học các cảm xúc tiêu cực.
+	
+	\item \textbf{Kiểm duyệt thủ công}: Rà soát và loại bỏ các bình luận mang tính xúc phạm hướng đến chủng tộc, giới tính, xu hướng tình dục hoặc người khuyết tật.
+	
+	\item \textbf{Lọc độ dài}: Giữ lại bình luận từ 3 đến 30 token. Tiến hành lấy mẫu giảm với giới hạn chặn dựa trên số lượng bình luận có số token bằng giá trị trung vị.
+	
+	\item \textbf{Cân bằng tính phân cực và cảm xúc}: Sử dụng một mô hình thử nghiệm huấn luyện trên 2.200 mẫu để ước lượng cảm xúc. Từ đó, loại bỏ các subreddit chứa hơn 30\% bình luận trung tính hoặc ít hơn 20\% bình luận tích cực/tiêu cực/mơ hồ, đồng thời thực hiện downsampling để giảm định kiến cảm xúc và cân bằng tỷ lệ giữa các subreddit.
+	
+	\item \textbf{Che giấu thông tin}: Từ 315.000 bình luận sạch sau bộ lọc (thuộc 482 subreddit), các tác giả lấy mẫu ngẫu nhiên để gán nhãn. Tên riêng chỉ người và các thuật ngữ tôn giáo được nhận diện bằng bộ gán nhãn thực thể BERT-based để thay thế bằng các mã token [NAME] và [RELIGION] nhằm triệt tiêu các định kiến phân loại.
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{3.1.png}
+	\caption{Minh họa các mẫu văn bản tiếng Anh thô trích xuất từ dữ liệu.}
+	\label{fig:bieudo9}
+\end{figure}
+
+Sau giai đoạn làm sạch, quá trình gán nhãn được thực hiện bởi đội ngũ gồm 82 người bản xứ nói tiếng Anh đến từ Ấn Độ nhằm đảm bảo tính chính xác tối đa về mặt ngữ nghĩa \cite{demszky2020goemotions}. Quy trình này tuân thủ cơ chế kiểm định nghiêm ngặt: mỗi bình luận ban đầu sẽ được đánh giá độc lập bởi 3 người; nếu không đạt được sự đồng thuận về ít nhất một nhãn, hệ thống sẽ tự động bổ sung thêm 2 người gán nhãn khác. Người gán nhãn được phép chọn nhiều cảm xúc cùng lúc nếu văn bản thể hiện sự đa chiều, hoặc lựa chọn nhãn Neutral trong trường hợp không chắc chắn. Kết quả thống kê cho thấy chất lượng gán nhãn đạt độ đồng thuận rất cao khi có tới 94\% số mẫu (tương đương 54.263 bình luận) đạt ít nhất 2 sự đồng thuận và 31\% số mẫu đạt từ 3 sự đồng thuận trở lên \cite{demszky2020goemotions}. Tuy nhiên, mức độ nhận diện giữa các lớp có sự phân hóa rõ rệt: các trạng thái hiển nhiên như biết ơn (gratitude), ngưỡng mộ (admiration), và thích thú (amusement) đạt độ đồng thuận rất cao; trái lại, các cảm xúc mang tính ngầm ẩn như đau buồn (grief) hay lo lắng (nervousness) lại có mức độ đồng thuận thấp nhất do đòi hỏi nhiều ngữ cảnh phức tạp hơn \cite{demszky2020goemotions}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{3.2.png}
+	\caption{Mô tả bộ dữ liệu GoEmotions.}
+	\label{fig:bieudo9}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{3.1.1.3.png}
+	\caption{Thống kê tổng quan về quy mô và chất lượng gán nhãn của tập dữ liệu GoEmotions.}
+	\label{fig:bieudo3.1.1.3}
+\end{figure}
+
+\subsection{Phân bố nhãn cảm xúc}
+
+Phân tích thống kê tần suất xuất hiện của 28 nhãn trên tập dữ liệu GoEmotions bộc lộ một thách thức cốt lõi của đề tài: Sự mất cân bằng dữ liệu (Class Imbalance) cực kỳ nghiêm trọng. Cấu trúc phân bố này tuân theo dạng đuôi dài (long-tail distribution), phản ánh đúng đặc tính tự nhiên của ngôn ngữ giao tiếp trên mạng xã hội.
+
+Ở nhóm chiếm ưu thế tuyệt đối, nhãn \textit{Neutral} (Trung tính) có tần suất xuất hiện cao nhất, chiếm tỷ trọng áp đảo trong không gian nhãn. Theo sau đó là các trạng thái cảm xúc mang tính tương tác xã hội tích cực và dễ bộc lộ trên internet như \textit{Approval} (Tán thành), \textit{Admiration} (Ngưỡng mộ), và \textit{Joy} (Vui vẻ). Sự hội tụ tại nhóm nhãn này hoàn toàn hợp lý với văn hóa diễn đàn Reddit, nơi phần lớn bình luận là những câu phản hồi ngắn gọn thể hiện sự đồng tình hoặc khen ngợi đối với bài đăng gốc.
+
+Ở chiều ngược lại, phần "đuôi dài" của phổ phân bố tập trung những cảm xúc có tần suất xuất hiện rất thấp, cá biệt một số nhãn chỉ chiếm chưa tới 1\% tổng số lượng mẫu. Các trạng thái như \textit{Grief} (Đau buồn), \textit{Relief} (Nhẹ nhõm), hay \textit{Pride} (Tự hào) cực kỳ khan hiếm. Sự thiếu hụt này xuất phát từ bản chất tâm lý học: đây là những dòng cảm xúc tinh vi, đòi hỏi những bối cảnh rất cụ thể, mang tính cá nhân cao và hiếm khi được người dùng biểu đạt trực tiếp qua các thông điệp văn bản ngắn trên không gian mạng mở.
+
+Đặc biệt, do tính chất của bài toán phân loại đa nhãn (Multi-label), một bình luận có thể được gán nhiều hơn một cảm xúc (ví dụ: vừa \textit{Amusement} vừa \textit{Approval}). Sự phân bố bất đối xứng và đan xen này đòi hỏi hệ thống thực nghiệm không thể dùng Accuracy làm thước đo chuẩn, mà bắt buộc phải áp dụng các kỹ thuật bù đắp trọng số (Class Weighting) và sử dụng chỉ số Macro F1-Score để đánh giá công bằng năng lực nhận diện của mô hình trên các nhãn thiểu số.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{3.3.png}
+	\caption{Phân bố nhãn cảm xúc.}
+	\label{fig:bieudo10}
+\end{figure}
+
+Đáng chú ý, biểu đồ (Hình 3.4) không chỉ phản ánh sự mất cân bằng nghiêm trọng về mặt số lượng (dạng đuôi dài), mà thang màu sắc còn chỉ ra một thách thức kép về mặt ngữ nghĩa. Các nhãn có tần suất xuất hiện cao ở nhóm đầu (như \textit{admiration}, \textit{gratitude}, \textit{amusement}) đều sở hữu dải màu tím đậm, chứng tỏ mức độ đồng thuận đánh giá rất cao. Ngược lại, các nhãn thiểu số nằm ở phần đuôi (như \textit{grief}, \textit{relief}, \textit{pride}) lại mang màu xanh nhạt hoặc trắng, tương ứng với hệ số tương quan rất thấp. Điều này khẳng định rằng: các cảm xúc hiếm gặp trong bộ dữ liệu cũng chính là những trạng thái tâm lý mơ hồ và khó nhận diện nhất đối với cả con người. Đây là cơ sở thực tiễn để đề tài áp dụng kỹ thuật tìm ngưỡng tối ưu tự động (Threshold Tuning) nhằm cứu vãn độ bao phủ (Recall) cho các nhãn thiểu số này trong giai đoạn thực nghiệm mô hình.
+
+\subsection{Tương quan giữa các nhãn}
+
+Bên cạnh việc khảo sát tần suất độc lập, phân tích ma trận tương quan (Correlation Heatmap) kết hợp phân cụm phân cấp (Hierarchical Clustering) dựa trên sự đồng xuất hiện của các nhãn cung cấp một góc nhìn sâu sắc về cấu trúc tâm lý ẩn trong bộ dữ liệu (Hình 3.1.3.1). Kết quả trực quan hóa cho thấy các nhãn cảm xúc không tồn tại biệt lập mà có sự liên kết mạng lưới chặt chẽ, tạo thành các cụm ngữ nghĩa mang tính phân cấp.
+
+Thứ nhất, tồn tại sự tương quan dương (Positive Correlation) mạnh mẽ giữa các cụm cảm xúc có sự tương đồng về sắc thái, thể hiện qua các vùng màu đỏ/hồng trên ma trận. Biểu hiện rõ nhất là sự đồng xuất hiện thường xuyên giữa cụm \textit{Anger} (Tức giận) đi kèm với \textit{Annoyance} (Khó chịu), hoặc cụm \textit{Joy} (Vui vẻ) và \textit{Amusement} (Thích thú). Điều này phản ánh logic tâm lý tự nhiên của con người, khi một trạng thái bức xúc thường kéo theo thái độ gắt gỏng trong ngôn từ. Việc tồn tại các cụm tương quan này giúp các thuật toán học máy (đặc biệt là mạng nơ-ron sâu) có thể chia sẻ trọng số và dễ dàng khái quát hóa các vùng không gian vectơ đặc trưng có ý nghĩa lân cận nhau.
+
+Thứ hai, ma trận cũng chỉ ra sự tương quan âm (Negative Correlation) rõ rệt giữa các nhóm cảm xúc đối lập, thể hiện qua các vùng giao cắt màu xanh dương. Các cặp nhãn như \textit{Sadness} (Buồn bã) và \textit{Joy} (Vui vẻ) gần như loại trừ lẫn nhau và hiếm khi xuất hiện trên cùng một không gian văn bản. Sự phân tách này tạo ra các ranh giới siêu phẳng (hyperplanes) tương đối sắc nét, hỗ trợ các thuật toán học máy tuyến tính (như LinearSVC hay Logistic Regression) bóc tách không gian và hoạt động ổn định hơn.
+
+Thứ ba, sơ đồ nhánh cây (Dendrogram) ở viền biểu đồ đã tự động phân rã 27 nhãn thành 3 cụm lớn. Cấu trúc này khớp hoàn toàn với 3 dải phân cực cảm xúc (Sentiment) cốt lõi bao gồm: Tích cực (màu xanh lá), Tiêu cực (màu xanh dương) và Mơ hồ/Đa nghĩa (màu vàng).
+
+Tóm lại, việc thấu hiểu cấu trúc tương quan đa nhãn không chỉ giải mã được hành vi biểu đạt cảm xúc của tập dữ liệu mà còn là cơ sở khoa học quan trọng. Nó định hướng trực tiếp cho đề tài sử dụng chiến lược One-Vs-Rest kết hợp cùng các hàm kích hoạt Sigmoid độc lập ở lớp đầu ra, cho phép mô hình nhận diện thành công sự đan xen phức tạp của các dòng trạng thái tâm lý
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{3.1.3.png}
+	\caption{Biểu đồ nhiệt (heatmap) thể hiện sự tương quan giữa các đánh giá cho từng cảm xúc. Biểu đồ biểu thị sự phân cụm phân cấp của các điểm đánh giá. Việc gán nhãn cảm xúc được thực hiện từ trước và cho thấy rằng các cụm tương ứng chặt chẽ với các nhóm cảm xúc \cite{demszky2020goemotions}.}
+	\label{fig:bieudo9}
+\end{figure}
+
+\section{Tiền xử lý}
+
+\subsection{Làm sạch văn bản}
+
+Sau khi thu thập và sàng lọc, các chuỗi văn bản thô từ Reddit vẫn chứa rất nhiều nhiễu ngôn ngữ, từ viết tắt, ký tự đặc biệt và lỗi mã hóa ký tự. Để chuẩn hóa dữ liệu đầu vào cho các mô hình, đề tài đã xây dựng một hàm tiền xử lý chuyên sâu mang tên advanced\_clean\_text. Quy trình này được thực hiện tuần tự qua các bước cốt lõi sau:
+\begin{itemize}
+	\item \textbf{Chuẩn hóa bảng mã và đồng bộ hóa ký tự:} Nhằm khắc phục triệt để hiện tượng lỗi hiển thị phông chữ (lỗi encoding thường gặp khi xử lý dữ liệu trích xuất từ Reddit), hệ thống sử dụng biểu thức chính quy để đồng bộ hóa mọi dạng ký tự dấu nháy đơn phi chuẩn \verb|[’‘´]| về dạng dấu nháy đơn chuẩn mực \verb|[']|. Đồng thời, thư viện \texttt{unicodedata} với chuẩn chuẩn hóa NFKD được áp dụng kết hợp với mã hóa ASCII để bóc tách, loại bỏ các dấu thanh, dấu phụ và ép toàn bộ chuỗi ký tự về định dạng văn bản ASCII thuần túy mà không làm mất đi ký tự gốc. 
+	
+	\item \textbf{Chuyển đổi chữ thường:} Toàn bộ chuỗi văn bản được đưa về dạng chữ viết thường. Bước này giúp mô hình đối xử thống nhất các từ có cách viết hoa khác nhau (như "\textit{Awesome}", "\textit{AWESOME}" và "\textit{awesome}"), từ đó làm giảm đáng kể kích thước không gian từ vựng.
+	
+	\item \textbf{Khai triển từ viết tắt:} Đặc trưng ngôn ngữ mạng xã hội của Reddit là mật độ từ viết tắt rất cao. Hàm tiền xử lý tiến hành tra cứu và giải nén các cụm từ viết tắt phổ biến (ví dụ: \textit{i'm} thành \textit{i am}, \textit{don't} thành \textit{do not}, \textit{it's} thành \textit{it is}) và sử dụng các bộ lọc đuôi cấu trúc (\textit{n't}, \textit{'re}, \textit{'ve}, \textit{'ll}...) để vớt các từ viết tắt còn sót lại, đưa văn bản về đúng cấu trúc ngữ pháp gốc.
+	
+	\item \textbf{Kỹ thuật nối từ phủ định:} Đây là một kỹ thuật nâng cao được cấy vào hệ thống nhằm bảo toàn ngữ nghĩa biểu cảm. Biểu thức chính quy sẽ tự động nhận diện cấu trúc từ phủ định đi kèm một động từ/tính từ liền sau và nối chúng lại bằng dấu gạch dưới (ví dụ: \textit{not like} thành \textit{not\_like}, \textit{not good} thành \textit{not\_good}). Kỹ thuật này giúp các mô hình học máy nhận biết được các cụm từ mang ý nghĩa đảo ngược, tránh việc đánh giá sai lệch trọng số của các từ tích cực/tiêu cực đơn lẻ.
+	
+	\item \textbf{Lọc nhiễu ký tự và ép từ lặp vô nghĩa:} Hệ thống sử dụng biểu thức chính quy để loại bỏ toàn bộ các ký tự đặc biệt, chỉ giữ lại khoảng trắng, ký tự chữ cái \verb|[a-z]|, chữ số \verb|[0-9]| và hai dấu biểu cảm cốt lõi là ! và ?. Đồng thời, các ký tự lặp lại vô nghĩa do thói quen gõ chữ của người dùng (ví dụ: \textit{soooo} thành \textit{so}) được ép về dạng gốc nhằm loại bỏ phân tán dữ liệu.
+	
+	\item \textbf{Chuẩn hóa gốc từ:} Ép toàn bộ các biến thể động từ mang các thì khác nhau (như \textit{loved}, \textit{loving}, \textit{loves}) quay trở về dạng nguyên thể gốc (\textit{love}), giúp tối ưu hóa không gian đặc trưng đầu vào.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{3.4.png}
+	\caption{Văn bản sau khi xử lý.}
+	\label{fig:bieudo11}
+\end{figure}
+
+\subsection{Biểu diễn văn bản và trích xuất đặc trưng}
+
+\subsubsection{Biểu diễn văn bản bằng phương pháp TF - IDF}
+
+Mục đích của TF-IDF: các thuật toán học máy truyền thống như Logictis Regulation, Support Vector Machine (SVM) hay Random Forest, không thể trực tiếp đọc hiểu các chuỗi văn bản thô. TF-IDF được sử dụng để chuyển đổi các đoạn văn bản thành các vector số học. Phương pháp này giúp mô hình đánh giá được mức độ quan trọng của từng từ vựng đối với một văn bản cụ thể trong một tập ngữ liệu lớn.
+
+Hệ thống tiến hành sử dụng công cụ TfidfVectorizer từ thư viện scikit-learn của Python để trích xuất đặc trưng văn bản. Quá trình cấu hình được tối ưu hóa thông qua các tham số kỹ thuật cụ thể:
+\begin{itemize}
+	\item \textbf{Cấu hình vùng từ (ngram\_range=(1, 2))}: Cho phép mô hình trích xuất cả từ đơn (Unigram) lẫn cụm hai từ liền kề (Bigram). Việc này giúp hệ thống bắt được ngữ cảnh của các cụm từ quan trọng, đặc biệt là các từ phủ định đã được liên kết ở bước tiền xử lý.
+	
+	\item \textbf{Giới hạn từ vựng (max\_features=5000)}: Hệ thống chỉ giữ lại 5.000 từ và cụm từ có tần suất xuất hiện tối ưu nhất trên toàn bộ tập dữ liệu Reddit nhằm giảm chiều dữ liệu, loại bỏ nhiễu và tăng tốc độ huấn luyện cho mô hình.
+\end{itemize}
+
+\subsubsection{Phương pháp nhúng từ Word2Vec}
+
+Khác với TF-IDF vốn chỉ tạo ra các ma trận thưa (sparse matrix) và bỏ qua mối liên hệ ngữ cảnh giữa các từ, phương pháp Word2Vec được áp dụng cho các cấu trúc mạng nơ-ron học sâu (CNN, LSTM) nhằm chuyển đổi văn bản thành các ma trận dày đặc (dense matrix). Việc này giúp hệ thống mô hình hóa được sự tương đồng về mặt ý nghĩa (semantic similarity) giữa các từ vựng.
+
+Quá trình trích xuất đặc trưng được cấu hình với các tham số kỹ thuật cụ thể như sau:
+\begin{itemize}
+	\item \textbf{Kiến trúc huấn luyện}: Sử dụng mô hình Skip-Gram (sg=1). Kiến trúc này được chọn vì hiệu quả vượt trội trong việc học biểu diễn các từ hiếm (infrequent words), vốn xuất hiện rất nhiều trong dữ liệu bình luận ngắn.
+	
+	\item \textbf{Số chiều không gian (Vector size)}: d = 100. Mỗi từ được ánh xạ thành một vectơ toán học chứa 100 đặc trưng số thực. Kích thước này được tính toán để cân bằng giữa khả năng biểu diễn ngữ nghĩa và chi phí tính toán phần cứng.
+	
+	\item \textbf{Kích thước cửa sổ trượt (Window size)}: window = 5. Mô hình sẽ đánh giá mối quan hệ của một từ trung tâm với 5 từ liền trước và 5 từ liền sau nó để học ngữ cảnh.
+	
+	\item \textbf{Ngưỡng tần suất (Min count)}: min\_count = 2. Các từ vựng (ví dụ như lỗi gõ phím ngẫu nhiên hoặc tên riêng) chỉ xuất hiện duy nhất 1 lần trong toàn bộ 58.000 câu bình luận sẽ bị loại bỏ hoàn toàn khỏi không gian từ vựng để tránh nhiễu mô hình.
+\end{itemize}
+
+Kết quả đầu ra của quá trình này là một ma trận nhúng (Embedding Matrix), đóng vai trò như một lớp từ điển số học để nạp trực tiếp vào Layer đầu tiên (Embedding Layer) của các mô hình học sâu ở phần 3.3.
+
+\section{Huấn luyện mô hình}
+
+Toàn bộ quá trình lập trình, cài đặt thực nghiệm và huấn luyện các mô hình học máy được nhóm tiến hành trên nền tảng điện toán đám mây kết hợp với phần cứng máy tính cá nhân. Môi trường thực thi cụ thể được thiết lập như sau:
+\begin{itemize}
+\item \textbf{Phần cứng máy tính cá nhân (PC)}: Máy tính để bàn chạy hệ điều hành Windows 10 Pro 64-bit, trang bị bộ vi xử lý Intel® Pentium® CPU G4400 @ 3.30GHz và bộ nhớ RAM 8GB.
+
+\item \textbf{Môi trường thực thi đám mây}: Google Colaboratory (Colab) được sử dụng làm môi trường thực thi chính, khai thác sức mạnh của bộ xử lý GPU nhằm tăng tốc độ huấn luyện cho các mô hình học sâu (Deep Learning).
+
+\item \textbf{Ngôn ngữ và Nền tảng}: Python 3, kết hợp với các thư viện học máy cốt lõi bao gồm Scikit-learn, TensorFlow và Keras.
+\end{itemize}
+
+\subsection{Mô hình hồi quy Logisic}
+
+Đầu vào của hệ thống tiếp tục là không gian đặc trưng văn bản thưa được số hóa qua phương pháp thống kê TF-IDF. Mặc dù Hồi quy Logistic nguyên bản được thiết kế cho bài toán phân loại nhị phân, hệ thống đã khéo léo ứng dụng chiến lược One-Vs-Rest (OvR) để mở rộng năng lực thuật toán, xây dựng 28 mô hình phân lớp tuyến tính độc lập nhằm giải quyết trọn vẹn bài toán đa nhãn (tương ứng với 28 sắc thái cảm xúc).
+
+Điểm nhấn cốt lõi của quy trình huấn luyện này là cơ chế thực nghiệm dò tìm siêu tham số C (Nghịch đảo của hệ số điều chuẩn - Inverse of Regularization Strength). Hệ thống sẽ tự động duyệt qua các mức điều chuẩn từ nặng đến nhẹ (ví dụ: 0.01, 0.1, 1, 10) để tìm ra trạng thái cân bằng lý tưởng nhất: vừa đủ khắt khe để triệt tiêu hiện tượng quá khớp (Overfitting) trên không gian ma trận TF-IDF khổng lồ, vừa đủ linh hoạt để mô hình học được các ranh giới từ vựng quan trọng. Bằng cách tính toán và so sánh trực tiếp độ đo Macro F1-Score trên tập kiểm định (Validation set), thuật toán sẽ chốt lại cấu hình trọng số ưu việt nhất và gán làm mô hình chính thức, tạo tiền đề vững chắc cho giai đoạn hiệu chỉnh ngưỡng quyết định (Threshold Tuning) phía sau.
+
+Để khắc phục tình trạng các nhãn cảm xúc thiểu số bị bỏ qua hoàn toàn khi sử dụng ngưỡng quyết định mặc định (0.5), hệ thống áp dụng kỹ thuật dò tìm ngưỡng tối ưu tự động trên tập kiểm định (Validation Set). Cụ thể, sau khi mô hình sinh ra ma trận xác suất thô, thuật toán sẽ quét độc lập qua 28 nhãn và thử nghiệm liên tục các giá trị ngưỡng từ 0.1 đến 1.0. Tại mỗi nhãn, mức ngưỡng mang lại điểm F1-Score cao nhất sẽ được tự động trích xuất và lưu lại thành một từ điển cấu hình. Bộ 28 ngưỡng tối ưu cục bộ này sau đó được áp dụng trực tiếp lên tập kiểm thử mù (Test Set) để nhị phân hóa kết quả dự đoán. Kỹ thuật này giúp hệ thống linh hoạt nới lỏng ranh giới (hạ ngưỡng) cho các cảm xúc khó đoán và siết chặt (tăng ngưỡng) với các nhãn dễ đoán, từ đó tối đa hóa độ bao phủ (Recall) trên tập dữ liệu mất cân bằng nghiêm trọng.
+
+\subsection{Mô hình Random Forest}
+
+Đầu vào của hệ thống là các đoạn văn bản đã được số hóa thành ma trận đặc trưng toán học thông qua phương pháp thống kê TF-IDF. Để giải quyết bài toán phân loại đa nhãn, hệ thống áp dụng chiến lược One-Vs-Rest (OvR) để khởi tạo và huấn luyện song song 28 mô hình "Rừng ngẫu nhiên" (Random Forest) độc lập. Mỗi mô hình lõi chịu trách nhiệm nhận diện một cảm xúc riêng biệt và được tinh chỉnh chặt chẽ với 100 cây quyết định, đồng thời giới hạn độ sâu (max\_depth) cùng số lượng mẫu tối thiểu tại các ngọn lá để triệt tiêu hiện tượng học vẹt (Overfitting) trên dữ liệu mất cân bằng. Ở giai đoạn dự đoán, hệ thống sẽ tổng hợp kết quả phân loại độc lập từ toàn bộ 28 khu rừng, từ đó đưa ra quyết định cuối cùng và cho phép gán đồng thời nhiều sắc thái tâm lý đan xen cho cùng một bình luận. 
+
+Để khắc phục tình trạng các nhãn cảm xúc thiểu số bị bỏ qua hoàn toàn khi sử dụng ngưỡng quyết định mặc định (0.5), hệ thống áp dụng kỹ thuật dò tìm ngưỡng tối ưu tự động trên tập kiểm định (Validation Set). Cụ thể, sau khi mô hình sinh ra ma trận xác suất thô, thuật toán sẽ quét độc lập qua 28 nhãn và thử nghiệm liên tục các giá trị ngưỡng từ -1 đến 0.95. Tại mỗi nhãn, mức ngưỡng mang lại điểm F1-Score cao nhất sẽ được tự động trích xuất và lưu lại thành một từ điển cấu hình. Bộ 28 ngưỡng tối ưu cục bộ này sau đó được áp dụng trực tiếp lên tập kiểm thử mù (Test Set) để nhị phân hóa kết quả dự đoán. Kỹ thuật này giúp hệ thống linh hoạt nới lỏng ranh giới (hạ ngưỡng) cho các cảm xúc khó đoán và siết chặt (tăng ngưỡng) với các nhãn dễ đoán, từ đó tối đa hóa độ bao phủ (Recall) trên tập dữ liệu mất cân bằng nghiêm trọng.
+
+\subsection{Mô hình Support Vector Machine (SVM)}
+
+Đầu vào của hệ thống là ma trận đặc trưng thưa (sparse matrix) được số hóa thông qua phương pháp thống kê TF-IDF. Để giải quyết trọn vẹn bài toán phân loại đa nhãn, hệ thống áp dụng chiến lược One-Vs-Rest (OvR) bao bọc bên ngoài thuật toán lõi LinearSVC, qua đó thiết lập 28 siêu mặt phẳng phân cách (Hyperplanes) độc lập tương ứng với 28 sắc thái cảm xúc.
+
+Đặc biệt, quá trình huấn luyện được tích hợp cơ chế dò tìm siêu tham số tự động để tìm ra giá trị điều chuẩn C (Soft Margin Penalty) tối ưu nhất. Thuật toán sẽ lặp qua một tập hợp các giá trị C khác nhau để tinh chỉnh "độ mềm" của lề phân loại — cân bằng giữa việc mở rộng ranh giới để khái quát hóa dữ liệu mạng xã hội và việc siết chặt ranh giới để bám sát tập huấn luyện. Điểm số Macro F1-Score được tính toán trên tập kiểm định (Validation set) sẽ đóng vai trò làm thước đo định lượng. Cấu hình C mang lại giá trị Macro F1 cao nhất sẽ được hệ thống tự động lựa chọn và gán làm mô hình chính thức, sẵn sàng cho bước tinh chỉnh ngưỡng quyết định (Threshold Tuning) tiếp theo.
+
+Để khắc phục tình trạng các nhãn cảm xúc thiểu số bị bỏ qua hoàn toàn khi sử dụng ngưỡng quyết định mặc định (0.5), hệ thống áp dụng kỹ thuật dò tìm ngưỡng tối ưu tự động trên tập kiểm định (Validation Set). Cụ thể, sau khi mô hình sinh ra ma trận xác suất thô, thuật toán sẽ quét độc lập qua 28 nhãn và thử nghiệm liên tục các giá trị ngưỡng từ 0.1 đến 1.0. Tại mỗi nhãn, mức ngưỡng mang lại điểm F1-Score cao nhất sẽ được tự động trích xuất và lưu lại thành một từ điển cấu hình. Bộ 28 ngưỡng tối ưu cục bộ này sau đó được áp dụng trực tiếp lên tập kiểm thử mù (Test Set) để nhị phân hóa kết quả dự đoán. Kỹ thuật này giúp hệ thống linh hoạt nới lỏng ranh giới (hạ ngưỡng) cho các cảm xúc khó đoán và siết chặt (tăng ngưỡng) với các nhãn dễ đoán, từ đó tối đa hóa độ bao phủ (Recall) trên tập dữ liệu mất cân bằng nghiêm trọng.
+
+\subsection{Mô hình CNN (1D - CNN)}
+
+Đầu vào của hệ thống là chuỗi các từ vựng đã được ánh xạ thành các vectơ số thực thông qua mạng nhúng từ (Word Embeddings). Hệ thống triển khai mạng thần kinh tích chập một chiều (1D-CNN) với nhiều bộ lọc có kích thước khác nhau quét dọc theo câu nhằm bóc tách các đặc trưng cụm từ (n-gram) cục bộ trong bình luận tiếng Anh. Các tín hiệu ngữ nghĩa nổi bật nhất sau đó được chắt lọc qua lớp Gộp tối đa (Max Pooling) và ghép nối thành một vectơ đặc trưng tổng hợp duy nhất đại diện cho toàn bộ câu. Đặc biệt, để phù hợp với bài toán phân loại đa nhãn, lớp nơ-ron đầu ra (Output Layer) được thiết kế kết hợp cùng hàm kích hoạt Sigmoid nhằm tính toán xác suất xuất hiện độc lập của từng cảm xúc, từ đó cho phép một bình luận có thể được gán đồng thời nhiều sắc thái tâm lý khác nhau.
+
+Để khắc phục tình trạng các nhãn cảm xúc thiểu số bị bỏ qua hoàn toàn khi sử dụng ngưỡng quyết định mặc định (0.5), hệ thống áp dụng kỹ thuật dò tìm ngưỡng tối ưu tự động trên tập kiểm định (Validation Set). Cụ thể, sau khi mô hình sinh ra ma trận xác suất thô, thuật toán sẽ quét độc lập qua 28 nhãn và thử nghiệm liên tục các giá trị ngưỡng từ 0.1 đến 1.0. Tại mỗi nhãn, mức ngưỡng mang lại điểm F1-Score cao nhất sẽ được tự động trích xuất và lưu lại thành một từ điển cấu hình. Bộ 28 ngưỡng tối ưu cục bộ này sau đó được áp dụng trực tiếp lên tập kiểm thử mù (Test Set) để nhị phân hóa kết quả dự đoán. Kỹ thuật này giúp hệ thống linh hoạt nới lỏng ranh giới (hạ ngưỡng) cho các cảm xúc khó đoán và siết chặt (tăng ngưỡng) với các nhãn dễ đoán, từ đó tối đa hóa độ bao phủ (Recall) trên tập dữ liệu mất cân bằng nghiêm trọng.
+
+\subsection{Mô hình LSTM}
+
+Đầu vào của hệ thống là chuỗi các từ vựng đã được ánh xạ thành các vectơ số thực thông qua mạng nhúng từ (Word Embeddings). Chuỗi vectơ này sẽ được truyền lần lượt qua các ô nhớ LSTM theo trật tự thời gian (kiến trúc Many-to-One). Sau khi quét đến từ cuối cùng của câu, trạng thái ẩn cuối cùng mang theo toàn bộ thông tin ngữ cảnh tổng hợp sẽ được truyền qua một lớp kết nối đầy đủ (Fully connected layer). Do tính chất của bài toán phân loại đa nhãn (Multi-label Classification), mạng nơ-ron đầu ra sẽ sử dụng hàm kích hoạt Sigmoid để đánh giá độc lập xác suất xuất hiện của từng nhãn cảm xúc, từ đó cho phép một bình luận có thể được gán đồng thời nhiều sắc thái tâm lý khác nhau. 
+
+Để khắc phục tình trạng các nhãn cảm xúc thiểu số bị bỏ qua hoàn toàn khi sử dụng ngưỡng quyết định mặc định (0.5), hệ thống áp dụng kỹ thuật dò tìm ngưỡng tối ưu tự động trên tập kiểm định (Validation Set). Cụ thể, sau khi mô hình sinh ra ma trận xác suất thô, thuật toán sẽ quét độc lập qua 28 nhãn và thử nghiệm liên tục các giá trị ngưỡng từ 0.1 đến 1.0. Tại mỗi nhãn, mức ngưỡng mang lại điểm F1-Score cao nhất sẽ được tự động trích xuất và lưu lại thành một từ điển cấu hình. Bộ 28 ngưỡng tối ưu cục bộ này sau đó được áp dụng trực tiếp lên tập kiểm thử mù (Test Set) để nhị phân hóa kết quả dự đoán. Kỹ thuật này giúp hệ thống linh hoạt nới lỏng ranh giới (hạ ngưỡng) cho các cảm xúc khó đoán và siết chặt (tăng ngưỡng) với các nhãn dễ đoán, từ đó tối đa hóa độ bao phủ (Recall) trên tập dữ liệu mất cân bằng nghiêm trọng.
+
+\section{Đánh giá mô hình}
+
+Để đo lường và so sánh khách quan hiệu năng giữa các thuật toán học máy truyền thống và các mạng học sâu trong bài toán phân loại đa nhãn với 28 sắc thái cảm xúc, nhóm tiến hành sử dụng các phương pháp và độ đo đánh giá tiêu chuẩn sau:
+
+\subsection{Báo cáo phân loại}
+
+Đây là bảng tổng hợp chi tiết hiệu suất của mô hình, cung cấp ba chỉ số cốt lõi cho từng nhãn cảm xúc bao gồm: Precision (Độ chuẩn xác), Recall (Độ bao phủ) và F1-Score (Trung bình điều hòa của Precision và Recall). Đặc biệt, do bộ dữ liệu GoEmotions bị mất cân bằng phân lớp nghiêm trọng, độ đo Accuracy (Độ chính xác tổng thể) sẽ gây ra những đánh giá sai lệch (ảo tưởng sức mạnh mô hình). Do đó, đề tài quyết định sử dụng Macro F1-Score làm thước đo tối thượng để so sánh các mô hình. Chỉ số này tính toán F1 độc lập cho từng nhãn rồi lấy trung bình cộng, bắt buộc mô hình phải dự đoán tốt cả những nhãn thiểu số (như \textit{grief}, \textit{pride}) thì mới đạt được điểm cao.
+ 
+\subsection{Ma trận nhầm lẫn}
+
+Đây là công cụ trực quan hóa dạng ma trận hai chiều, so sánh trực tiếp giữa nhãn thực tế (True Label) và nhãn do mô hình dự đoán (Predicted Label). Đối với không gian đặc trưng phức tạp của văn bản, ma trận nhầm lẫn không chỉ giúp tính toán số lượng mẫu đúng/sai, mà còn giúp nhóm nhận diện được hiện tượng mô hình thường xuyên nhầm lẫn giữa các cảm xúc có chung vĩ độ tâm lý hoặc sắc thái gần giống nhau (ví dụ: nhầm lẫn giữa \textit{annoyance} - \textit{khó chịu} và \textit{anger} - \textit{giận dữ})
+
+\subsection{Đường cong học tập (Learning Curve / Loss Curve)}
+
+Độ đo này được áp dụng đặc biệt cho quá trình huấn luyện các mạng thần kinh học sâu (CNN, LSTM). Đồ thị biểu diễn sự biến thiên của hàm mất mát (Training Loss / Validation Loss) và điểm số đánh giá qua từng chu kỳ huấn luyện (epoch). Việc theo dõi đường cong này giúp hệ thống đánh giá được tốc độ hội tụ của mô hình, đồng thời phát hiện sớm các hiện tượng học vẹt, quá khớp (Overfitting) hay chưa khớp (Underfitting) để từ đó có những điều chỉnh kịp thời về tham số Dropout hay L2-Regularization.

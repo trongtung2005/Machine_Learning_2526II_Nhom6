@@ -1,0 +1,22 @@
+% Chương 5
+
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN} % Tên của chương
+
+\label{Chapter5} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{Chapter5}
+
+%----------------------------------------------------------------------------------------
+
+\section{Kết quả đạt được}
+
+Đề tài đã hoàn thành xuất sắc các mục tiêu cốt lõi được đặt ra ban đầu, bao gồm việc nghiên cứu, xây dựng và đánh giá toàn diện hệ thống phân loại đa nhãn cảm xúc từ dữ liệu văn bản mạng xã hội. Bằng việc khai thác bộ dữ liệu chuẩn GoEmotions với 28 trạng thái tâm lý phức tạp, nhóm nghiên cứu đã triển khai thành công một luồng xử lý ngôn ngữ tự nhiên (NLP) khép kín. Quá trình này bắt đầu từ việc làm sạch dữ liệu thô, chuẩn hóa ngôn từ mạng xã hội, xử lý cấu trúc phủ định, cho đến bước trích xuất đặc trưng văn bản thông qua hai phương pháp là thống kê TF-IDF và kỹ thuật nhúng từ Word2Vec. Qua quá trình thực nghiệm và so sánh chéo 5 thuật toán học máy đại diện bao gồm Hồi quy Logistic, Random Forest, LinearSVC, 1D-CNN và LSTM, kết quả cho thấy các thuật toán tuyến tính truyền thống kết hợp với ma trận thưa TF-IDF (đặc biệt là LinearSVC và Logistic Regression) mang lại hiệu quả khái quát hóa ấn tượng nhất với điểm Macro F1-Score đạt 0.43. Khả năng phân định ranh giới rõ ràng thông qua chiến lược One-Vs-Rest đã giúp các mô hình này xử lý tốt đặc tính văn bản ngắn và vượt qua rào cản về sự mất cân bằng cực đoan dạng đuôi dài (long-tail) của dữ liệu. Trong khi đó, các mô hình học sâu (CNN, LSTM) dù sở hữu khả năng nắm bắt ngữ nghĩa tốt nhưng lại bộc lộ hạn chế ở các nhãn thiểu số do thiếu hụt lượng mẫu huấn luyện cần thiết, đồng thời đòi hỏi sự tinh chỉnh phức tạp về cơ chế chống quá khớp và dò tìm ngưỡng tối ưu tự động (Threshold Tuning).
+
+\section{Hướng phát triển trong tương lai}
+
+Mặc dù hệ thống đã đạt được những kết quả khả quan trong việc bóc tách và nhận diện các cụm cảm xúc phổ biến, song năng lực dự đoán đối với các trạng thái tâm lý ngầm ẩn, hiếm gặp (như \textit{grief}, \textit{pride}, \textit{relief}) vẫn là một thách thức lớn cần được giải quyết. Trong tương lai, định hướng quan trọng nhất của đề tài là áp dụng các kỹ thuật cân bằng dữ liệu nâng cao, điển hình như phương pháp sinh mẫu thiểu số (SMOTE) hoặc tăng cường dữ liệu (Data Augmentation), nhằm cung cấp đủ không gian ngữ cảnh cho mô hình học tập ở những nhãn hiếm. Bên cạnh đó, việc nâng cấp hệ thống trích xuất đặc trưng từ Word2Vec lên các kiến trúc Mô hình ngôn ngữ lớn (Large Language Models) tiên tiến dựa trên nền tảng Transformer như BERT hoặc RoBERTa sẽ là một bước đột phá. Các mô hình này có khả năng "thấu cảm" sâu sắc hơn cấu trúc ngữ pháp, nắm bắt chính xác hiện tượng đa nghĩa và những sắc thái tinh vi của con người trên không gian mạng. Cuối cùng, nhóm hướng tới việc tối ưu hóa và đóng gói mô hình thành một hệ thống API hoàn chỉnh, mở ra cơ hội ứng dụng thực tiễn trong các lĩnh vực như phân tích rủi ro tâm lý người dùng diễn đàn, kiểm duyệt nội dung tự động hoặc hỗ trợ phân tích phản hồi trong dịch vụ chăm sóc khách hàng
+
+\section{Tài liệu mã nguồn mở}
+
+Nhằm đảm bảo tính minh bạch, tính lặp lại của các thực nghiệm khoa học, cũng như tạo tài liệu tham khảo cho các nghiên cứu phát triển tiếp theo, toàn bộ mã nguồn lập trình, các kịch bản tiền xử lý dữ liệu (notebooks), ma trận trọng số của các mô hình đã huấn luyện và tài liệu liên quan đến đề tài đều được nhóm lưu trữ và công khai hoàn toàn.
+Chi tiết hệ thống và mã nguồn dự án được lưu trữ tại kho mã nguồn GitHub của nhóm:
+
+Đường dẫn truy cập: https://github.com/trongtung2005/Machine\_Learning\_2526II\_Nhom6

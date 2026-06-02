@@ -1,0 +1,271 @@
+% Chương 4
+
+\chapter{KẾT QUẢ VÀ THẢO LUẬN} % Tên của chương
+
+\label{Chapter4} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{Chapter4}
+
+%----------------------------------------------------------------------------------------
+
+\section{Kết quả}
+
+\subsection{Hồi quy Logistic + TF - IDF}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.png}
+	\caption{Classification Report của Hồi quy Logistic + TF - IDF.}
+	\label{fig:bieudo12}
+\end{figure}
+
+\textbf{Hiệu suất tổng thể}: Mô hình đạt điểm số Macro F1-Score là 0.43. Đây là một mức điểm phản ánh đúng thực tế của bài toán phân loại đa nhãn phức tạp (28 lớp) trên dữ liệu văn bản ngắn, đồng thời cho thấy sự khó khăn của thuật toán tuyến tính khi phải xử lý không gian đặc trưng thưa thớt của mạng xã hội.
+
+\textbf{Điểm sáng ở các nhãn đa số}: Thuật toán hoạt động cực kỳ hiệu quả ở những nhãn cảm xúc có số lượng mẫu dồi dào (support cao). Điển hình như nhãn gratitude (327 mẫu) đạt F1-Score xuất sắc lên tới 0.89, hay nhãn amusement (316 mẫu) đạt 0.78. Điều này chứng tỏ khi được cung cấp đủ dữ liệu, chiến lược One-Vs-Rest của Logistic Regression học được các ranh giới quyết định rất tốt.
+
+\textbf{Hạn chế ở các nhãn thiểu số}: Ngược lại, hiện tượng mất cân bằng dữ liệu đã tác động tiêu cực đến năng lực dự đoán của mô hình ở các lớp hiếm gặp. Nhãn grief (chỉ có 7 mẫu test) có điểm F1-Score chạm đáy ở mức 0.13, hay relief (19 mẫu test) chỉ đạt 0.16. Do tập huấn luyện quá mỏng, mô hình không thể khái quát hóa được các từ khóa cốt lõi của những cảm xúc này, dẫn đến độ bao phủ (recall) rất thấp.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.2.png}
+	\caption{Confusion Matrix của Hồi quy Logistic + TF - IDF.}
+	\label{fig:bieudo13}
+\end{figure}
+
+Mô hình dự đoán cực kỳ nhạy bén và chuẩn xác ở các nhãn có dữ liệu dồi dào (Amusement, Gratitude, Love). Ngược lại, nó gần như "bị mù" và không thể nhận diện được các nhãn thiểu số (Grief, Pride, Relief) do số ca đoán trúng (True Positive) chỉ đếm trên đầu ngón tay.
+
+Ở nhãn Trung tính (Neutral): Khi đối mặt với các câu bình luận chứa cảm xúc lấp lửng, mơ hồ hoặc chứa từ lóng chưa học được, mô hình có xu hướng an toàn đẩy hết kết quả về nhãn Neutral. Điều này khiến lượng dự đoán nhầm (False Positive) ở nhãn Trung tính vọt lên mức cao nhất toàn hệ thống (1367 mẫu).
+
+\subsection{Random Forest + TF - IDF}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.3.png}
+	\caption{Classification Report của Random Forest + TF - IDF.}
+	\label{fig:bieudo14}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.4.png}
+	\caption{Confusion Matrix của Random Forest + TF - IDF.}
+	\label{fig:bieudo15}
+\end{figure}
+
+\textbf{Hiệu năng tổng thể}: Mô hình đạt điểm Macro F1-Score là 0.40. Dù điểm số tổng thể có phần khiêm tốn hơn so với các mô hình tuyến tính, nhưng đây vẫn là một kết quả đáng ghi nhận đối với thuật toán Tree-based (dựa trên cây) khi phải xử lý ma trận thưa (sparse matrix) khổng lồ của TF-IDF trên bài toán 28 nhãn mất cân bằng nghiêm trọng.
+
+\textbf{Hạn chế bộc lộ trên các nhãn thiểu số}: Random Forest gặp khó khăn cực lớn với các nhãn hiếm (như grief, pride, relief). Đối chiếu sang Ma trận nhầm lẫn, số ca đoán trúng (True Positive) ở các nhãn này gần như bằng 0. Do số lượng mẫu quá ít, các cây quyết định không thể phân nhánh đủ sâu để tạo ra luật dự đoán, dẫn đến độ bao phủ (Recall) sụp đổ hoàn toàn.
+
+\textbf{Phong độ ổn định ở nhãn đa số}: Bù lại, đối với các cảm xúc có tần suất xuất hiện dày đặc như amusement, joy hay anger, Random Forest phát huy tối đa sức mạnh của học tổ hợp (Ensemble Learning). Việc tổng hợp kết quả bình chọn từ hàng trăm cây độc lập giúp mô hình nhận diện cực kỳ ổn định, bắt trúng các từ khóa cốt lõi và duy trì độ chuẩn xác (Precision) cao.
+
+\textbf{Hiện tượng "đổ đống" vào nhãn Trung tính (Neutral)}: Giống như các mô hình truyền thống khác, giới hạn của phương pháp Bag-of-Words khiến Random Forest không hiểu được ngữ cảnh vĩ mô. Điểm yếu này thể hiện rõ nhất trên Ma trận nhầm lẫn khi lượng dự đoán nhầm (False Positive) ở nhãn Neutral vọt lên mức cao nhất. Khi gặp các câu lấp lửng, thiếu từ khóa rõ ràng, các cây quyết định có xu hướng "bỏ phiếu trắng", đẩy toàn bộ kết quả về nhãn Trung tính để an toàn.
+
+\subsubsection{LinearSVC + TF - IDF}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.5.png}
+	\caption{Classification Report của LinearSVC + TF - IDF.}
+	\label{fig:bieudo16}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.6.png}
+	\caption{Confusion Matrix của LinearSVC + TF - IDF.}
+	\label{fig:bieudo17}
+\end{figure}
+
+\textbf{Hiệu năng tổng thể}: Mô hình đạt điểm Macro F1-Score là 0.43. Sự phân bổ hiệu suất giữa các nhãn lại cho thấy sự vượt trội rõ rệt về mặt thuật toán của SVM đối với bài toán mất cân bằng dữ liệu.
+
+\textbf{Sức mạnh trên các nhãn thiểu số}: LinearSVC sử dụng cơ chế tối ưu hóa lề (margin) dựa trên các Vector Hỗ trợ (Support Vectors). Nhờ việc tập trung kẻ siêu mặt phẳng phân cách (Hyperplane) cứng dựa trên các điểm dữ liệu nằm sát biên, SVM đã "vớt vát" thành công độ bao phủ (Recall) của các nhãn cực hiếm, đẩy điểm F1 của nhóm này lên mức khả quan hơn đáng kể.
+
+\textbf{Phong độ ổn định ở nhãn đa số}: Đối với các cảm xúc có tần suất xuất hiện dày đặc như amusement, gratitude hay love, LinearSVC vẫn duy trì được độ chuẩn xác (Precision) rất cao. Khả năng xử lý tốt ma trận thưa (sparse matrix) 5000 chiều của TF-IDF giúp thuật toán này bóc tách ranh giới của các từ khóa đặc trưng một cách sắc bén.
+
+\textbf{Hạn chế}: Dù đã cải thiện được việc nhận diện nhãn thiểu số, SVM vẫn vấp phải rào cản chung của các mô hình học máy truyền thống khi không thể hiểu được ngữ cảnh vĩ mô và thứ tự từ vựng trong câu (do bản chất của TF-IDF là Bag-of-Words). Điều này khiến mô hình vẫn bị nhầm lẫn (False Positive) nhiều ở nhãn Neutral khi gặp các câu có cấu trúc lấp lửng.
+
+\subsection{Multi-Kernel 1D CNN + Word2Vec}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.4.4.png}
+	\caption{Classification Report của Multi-Kernel 1D CNN + Word2Vec.}
+	\label{fig:bieudo4.1.4.4}
+\end{figure}
+
+Đánh giá hiệu suất phân loại dựa trên F1-Score Kết quả dự đoán trên tập kiểm thử (Test Set) cung cấp một cái nhìn chi tiết về sức mạnh cũng như giới hạn của mô hình trên tập dữ liệu phân bố lệch (imbalanced data).
+\begin{itemize}
+	\item Sự cân bằng giữa Precision và Recall: Điểm Macro Precision đạt 0.4 và Macro Recall đạt 0.44 cho thấy thuật toán Dò tìm ngưỡng tối ưu (Threshold Tuning) đã hoạt động chính xác. Mô hình không bị thiên lệch theo hướng dự đoán bừa (khiến Recall cao, Precision thấp) hay quá khắt khe (khiến Precision cao, Recall thấp) mà đã thiết lập được một điểm cắt (cut-off) hài hòa nhất.
+	
+	\item Những nhãn hiếm gặp trong tập huấn luyện (chỉ xuất hiện vài chục mẫu) như \textit{Grief}, \textit{Relief}, chưa có đủ khối lượng ngữ cảnh để mô hình học được đặc trưng, dẫn đến F1-Score xấp xỉ 0. Khi tính trung bình không trọng số (Macro Average), điểm số của các nhãn thiểu số này đã kéo tụt tổng điểm hệ thống.
+	
+	\item Các điểm sáng trong nhận diện cảm xúc: Bù lại, với các nhãn có khối lượng dữ liệu lớn hoặc mang các từ khóa ngữ nghĩa rõ ràng, mạng CNN thể hiện sức mạnh nhận diện vượt trội. Điển hình như nhãn \textit{Gratitude} (Biết ơn) đạt điểm F1 lên tới 0.89, \textit{Love} (Yêu thương) đạt 0.78, \textit{Neutral} (Trung lập) đạt 0.65, và \textit{Remorse} (Hối hận) đạt 0.62. Điều này khẳng định rằng đối với những cụm từ mang sắc thái biểu cảm định hình rõ, các bộ lọc Multi-Kernel của mạng CNN hoàn toàn đủ khả năng quét và trích xuất thành công.
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.4.2.png}
+	\caption{Biểu đồ lịch sử huấn luyện của Multi-Kernel 1D CNN + Word2Vec.}
+	\label{fig:bieudo16}
+\end{figure}
+
+Từ hình 4.1.4.2, đánh giá biểu đồ lịch sử huấn luyện cho thấy mô hình Multi-Kernel 1D CNN có khả năng trích xuất đặc trưng ngôn ngữ và hội tụ rất tốt trong giai đoạn đầu. Từ Epoch 1 đến Epoch 4, hàm mất mát trên tập kiểm định (Validation Loss) giảm đều đặn và chạm mức thấp nhất ở khoảng 0.103. Tương ứng với đó, độ đo Validation AUC tăng trưởng mạnh mẽ và đạt đỉnh tại 84.5\% (0.845). Mức AUC này là một minh chứng rõ ràng cho thấy cấu trúc mạng tích chập đề xuất kết hợp với biểu diễn từ vựng (Word Embeddings) đã phân biệt thành công các dải phổ cảm xúc đa dạng của văn bản.
+
+Tuy nhiên, từ Epoch thứ 5 trở đi, hiện tượng quá khớp (Overfitting) bắt đầu xuất hiện. Trong khi Training Loss tiếp tục suy giảm tuyến tính xuống mức 0.06 và Training AUC tiệm cận mức 0.95 (mô hình học thuộc dữ liệu), thì Validation Loss lại có xu hướng nảy ngược đi lên (đạt >0.12) và Validation AUC đi ngang. Mặc dù vậy, nhờ việc áp dụng thành công cơ chế Dừng sớm (Early Stopping) với tham số restore\_best\_weights, hệ thống đã tự động bảo toàn được bộ trọng số tối ưu nhất tại bước sóng phân kỳ (Epoch 4), đảm bảo mô hình giữ được khả năng tổng quát hóa khi dự đoán trên dữ liệu thực tế.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.4.3.png}
+	\caption{Confusion matrix của Multi-Kernel 1D CNN + Word2Vec.}
+	\label{fig:bieudo16}
+\end{figure}
+
+Nhìn chung, bộ ma trận nhầm lẫn cho thấy mô hình xử lý bài toán phân loại đa nhãn khá hiệu quả, đặc biệt xuất sắc ở các nhóm cảm xúc có từ vựng biểu đạt rõ ràng như \textit{Amusement}, \textit{Gratitude}, \textit{Love} và \textit{Neutral} (tỷ lệ True Positive cao, False Negative thấp). Sự áp đảo của các ô True Negative phản ánh đúng bản chất thưa thớt của dữ liệu văn bản thực tế, nơi mỗi bình luận thường chỉ mang 1 đến 2 nhãn cảm xúc. Tuy nhiên, kết quả cũng chỉ ra hai hạn chế cục bộ: các nhãn thiểu số (\textit{Grief}, \textit{Pride}) gần như không thể nhận diện do hiện tượng thiếu hụt dữ liệu huấn luyện (Data Sparsity), trong khi các cảm xúc có ranh giới ngữ nghĩa mập mờ (\textit{Annoyance}, \textit{Realization}) lại có tỷ lệ nhận diện nhầm (False Positive) tương đối cao. Tổng thể, nhờ sức mạnh biểu diễn từ vựng và chiến lược tinh chỉnh ngưỡng cắt, mạng học sâu đã phân tách tốt các đặc trưng cốt lõi dù phải đối mặt với tập dữ liệu mất cân bằng nghiêm trọng.
+
+\subsection{LSTM + Word2Vec}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.5.1.png}
+	\caption{Classification Report của LSTM + Word2Vec.}
+	\label{fig:bieudo4.1.5.1}
+\end{figure}
+
+Đánh giá hiệu suất phân loại dựa trên F1-Score của mô hình LSTM + Word2Vec: Dựa trên Bảng báo cáo phân loại (Classification Report), kết quả thực nghiệm của mô hình LSTM kết hợp Word2Vec cho thấy hệ thống đạt điểm Macro F1-Score là 0.39 và Micro F1-Score là 0.52.
+\begin{itemize}
+	\item Điểm sáng ở các nhãn đa số: Mô hình LSTM phát huy sức mạnh ở các nhãn có khối lượng dữ liệu dồi dào và ngữ cảnh rõ ràng, điển hình như nhãn gratitude đạt F1-Score 0.88, amusement đạt 0.80 và love đạt 0.76. Điều này cho thấy khả năng ghi nhớ trật tự từ vựng theo thời gian của LSTM (thông qua kiến trúc Many-to-One) đã giúp mô hình bắt trúng các ngữ cảnh biểu đạt cảm xúc mạnh.
+	
+	Hạn chế ở các nhãn thiểu số: Tương tự như các mô hình trước, hiện tượng mất cân bằng dữ liệu tiếp tục là rào cản lớn. Các nhãn thiểu số như grief có điểm F1-Score rơi xuống 0.00, pride đạt 0.12 và relief đạt 0.10. Sự thiếu hụt dữ liệu khiến các trạng thái ẩn (hidden states) của LSTM không có đủ bối cảnh để học được các mẫu đặc trưng của những cảm xúc tinh vi này, dẫn đến độ bao phủ (Recall) cực kỳ thấp.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.5.2.png}
+	\caption{Confusion Matrix của LSTM + Word2Vec.}
+	\label{fig:bieudo16}
+\end{figure}
+
+Sự áp đảo của True Negative (TN): Tương tự như mạng CNN, các ô True Negative ở tất cả các nhãn đều có giá trị rất cao (ví dụ: admiration đạt 4763, amusement đạt 5040). Điều này phản ánh chính xác bản chất thưa thớt của bài toán đa nhãn, nơi phần lớn các bình luận sẽ không chứa sắc thái cảm xúc đang được xét đến.
+
+Khả năng nhận diện tốt ở các nhãn có ngữ cảnh đặc trưng: Đối với các cảm xúc có khối lượng dữ liệu huấn luyện dồi dào và cấu trúc câu rõ ràng, LSTM cho thấy khả năng nắm bắt trật tự từ vựng hiệu quả. Số ca đoán trúng (True Positive) ở các nhãn như gratitude (281), amusement (256) duy trì ở mức cao và tỷ lệ bỏ sót (False Negative) tương đối thấp.
+
+Sự "tê liệt" trước các nhãn thiểu số: Hạn chế lớn nhất của mô hình tiếp tục bộc lộ tại các nhãn cực hiếm. Nhãn grief có số ca đoán trúng (TP) bằng 0, nhãn pride chỉ đoán trúng 2 ca. Dù kiến trúc bộ nhớ dài - ngắn của LSTM được thiết kế để học ngữ cảnh phức tạp, sự thiếu hụt trầm trọng của các mẫu dữ liệu này khiến mạng nơ-ron không đủ cơ sở để thiết lập ranh giới phân loại, dẫn đến việc mô hình gần như bỏ qua hoàn toàn các trạng thái tâm lý này.
+
+Hiện tượng nhầm lẫn lớn ở nhãn Neutral: Đáng chú ý, tại nhãn Trung tính (Neutral), lượng dự đoán nhầm (False Positive) lên tới con số 1043 mẫu. Điều này chứng tỏ khi đối mặt với các câu bình luận lấp lửng, mơ hồ hoặc chứa các từ lóng chưa từng xuất hiện trong tập huấn luyện, LSTM vẫn gặp lúng túng và có xu hướng "đẩy" dự đoán về trạng thái an toàn là trung tính.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.1.5.3.png}
+	\caption{Biểu đồ lịch sử huấn luyện của LSTM + Word2Vec.}
+	\label{fig:bieudo4.1.5.3}
+\end{figure}
+
+\textbf{Đánh giá biểu đồ huấn luyện (Learning Curve)}
+\begin{itemize}
+	\item Thông qua biểu đồ Training vs Validation Loss, có thể thấy mạng LSTM hội tụ rất tốt ở những Epoch đầu tiên, với Validation Loss giảm dần và chạm đáy ở khoảng Epoch 4.
+	
+	\item Đồng thời, đồ thị Validation Binary Accuracy cũng đạt đỉnh và duy trì ổn định ở mức trên 0.96 tại Epoch 4.
+	
+	\item Tuy nhiên, từ Epoch thứ 5 trở đi, hiện tượng quá khớp (Overfitting) bắt đầu bộc lộ. Training Loss tiếp tục giảm tiệm cận 0, nhưng Validation Loss lại đảo chiều tăng vọt lên mức trên 0.035. Nhờ vào cơ chế Dừng sớm (Early Stopping) được cài đặt, hệ thống đã tự động dừng huấn luyện và khôi phục bộ trọng số tối ưu nhất tại Epoch 4 để tiến hành kiểm thử
+\end{itemize}
+
+\section{So sánh}
+
+Dựa trên kết quả thực nghiệm của 5 mô hình trên cùng một tập dữ liệu thử nghiệm, nhóm rút ra các so sánh tổng thể như sau:
+\begin{itemize}
+	\item \textbf{Hiệu năng tổng quát (Macro F1-Score)}: Các mô hình tuyến tính truyền thống bao gồm Hồi quy Logistic (0.43) và LinearSVC (0.43) kết hợp với biểu diễn TF-IDF bất ngờ thể hiện hiệu năng cao nhất và đồng đều nhất trên toàn hệ thống. Mô hình học tổ hợp Random Forest đạt 0.41, trong khi các mạng học sâu 1D-CNN và LSTM đạt điểm số lần lượt là 0.40 và 0.39.
+	
+	\item \textbf{Khả năng xử lý mất cân bằng dữ liệu}: Các mô hình áp dụng chiến lược One-Vs-Rest (như LinearSVC và Hồi quy Logistic) kiểm soát ranh giới phân loại rất tốt trên các không gian đặc trưng thưa thớt (sparse matrix). Thuật toán tối đa hóa lề (max-margin) của SVM giúp nó có khả năng "vớt vát" được độ bao phủ (Recall) cho các nhãn cực hiếm. Ngược lại, Random Forest hay mạng học sâu lại rất dễ bị tổn thương ở phần đuôi dài (long-tail) của phân bố dữ liệu, khiến kết quả dự đoán nhãn thiểu số gần như sụp đổ.
+\end{itemize}
+
+\section{Ưu nhược điểm của các mô hình}
+
+\textbf{Hồi quy Logistic \& Support Vector Machine (LinearSVC)}:
+\begin{itemize}
+	\item \textbf{Ưu điểm}: Khả năng xử lý xuất sắc ma trận thưa thớt (5000 chiều) sinh ra từ phương pháp TF-IDF. Tốc độ huấn luyện nhanh, có cơ chế điều chuẩn linh hoạt, và đặc biệt tối ưu với chiến lược dò tìm siêu tham số tự động.
+	
+	\item \textbf{Nhược điểm}: Do đặc thù của TF-IDF là bỏ qua thứ tự từ (Bag-of-Words), các mô hình này không thể hiểu được ngữ cảnh vĩ mô của câu. Hậu quả là chúng dễ bị bối rối trước các câu lấp lửng và có xu hướng "đổ đống" dự đoán sai (False Positive) vào nhãn Neutral.
+\end{itemize}
+
+\textbf{Random Forest}:
+\begin{itemize}
+	\item \textbf{Ưu điểm}: Tận dụng trí tuệ tập thể (Ensemble Learning) giúp mô hình đạt độ chuẩn xác (Precision) cực kỳ cao và ổn định trên các nhãn đa số (Amusement, Joy, Anger).
+	
+	\item \textbf{Nhược điểm}: Hiệu năng sụt giảm nghiêm trọng đối với dữ liệu mất cân bằng. Các nhãn thiểu số (Grief, Pride) không cung cấp đủ lượng mẫu để cây quyết định phân nhánh học luật, khiến Recall chạm đáy.
+\end{itemize}
+
+\textbf{Mạng học sâu (1D-CNN \& LSTM)}:
+\begin{itemize}
+	\item \textbf{Ưu điểm}: Kết hợp với Word2Vec giúp mô hình thấu hiểu mối liên hệ ngữ nghĩa (semantic similarity) giữa các từ vựng. CNN bóc tách xuất sắc các cụm n-gram biểu cảm, còn LSTM xử lý tốt các câu văn có độ phụ thuộc ngữ cảnh dài.
+	
+	\item \textbf{Nhược điểm}: Dễ gặp hiện tượng học vẹt (Overfitting) trên tập dữ liệu mất cân bằng. Đòi hỏi tài nguyên phần cứng lớn (GPU) để tối ưu hóa hàng nghìn chu kỳ lặp và phụ thuộc rất nhiều vào các cơ chế như Early Stopping hay Threshold Tuning để bảo toàn hiệu năng thực tế.
+\end{itemize}
+
+\section{Kết quả thực nghiệm trực quan trên văn bản thực tế}
+
+\subsection{Kịch bản thực nghiệm}
+
+Để đánh giá và đối chứng trực quan năng lực suy luận của 05 mô hình phân loại (bao gồm cả các tiếp cận Học máy truyền thống và Học sâu), nhóm nghiên cứu xây dựng kịch bản thực nghiệm định tính (Live Test) bằng cách chọn lọc 04 câu bình luận tiếng Anh ngẫu nhiên chưa từng xuất hiện trong tập huấn luyện. Các câu văn này được thiết kế theo 04 ngữ cảnh thực tế khác nhau nhằm thách thức toàn diện các bộ lọc: (1) Câu mang tính chất cổ vũ chứa đa sắc thái phức tạp; (2) Câu chứa các từ ngữ tương phản dễ gây hiểu lầm về mặt ngữ nghĩa thuần túy (\textit{laughed so hard... ribs hurt}); (3) Câu tường minh mang đặc trưng từ vựng mạnh (\textit{Thank you so much}); và (4) Câu thể hiện trạng thái tâm lý hỗn hợp chuyển biến qua liên từ (\textit{nervous... but also excited}). Cả 04 kịch bản này sau đó sẽ được đưa qua cùng một đường ống tiền xử lý văn bản để tiến hành chạy thử nghiệm đồng thời trên cả 05 mô hình
+
+\subsection{Kết quả thực nghiệm}
+
+\textbf{Hồi quy Logistic}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.5.2.1.png}
+	\caption{Kết quả thực nghiệm Logistics.}
+	\label{fig:bieudo4.5.2.1}
+\end{figure}
+
+Mô hình Hồi quy Logistic (OVR) thể hiện khả năng phân loại đa nhãn ổn định, nhận diện chính xác các từ khóa tường minh để kích hoạt đúng nhãn chủ đạo như \textit{Gratitude} (83.58\% ở kịch bản 3) hay cặp trạng thái hỗn hợp \textit{Excitement} (75.66\%) - \textit{Nervousness} (74.13\% ở kịch bản 4). Tuy nhiên, do hạn chế đặc trưng của học máy truyền thống là chưa tối ưu được ngữ cảnh chuỗi, mô hình bị giảm độ tự tin ở câu có cấu trúc ẩn dụ phức tạp. Minh chứng ở kịch bản 2, hai sắc thái đối lập \textit{Amusement} (56.72\%) và \textit{Sadness} (60.32\%) chỉ đạt mức điểm mấp mém vượt ngưỡng tối ưu. Dù vậy, đây vẫn là thuật toán baseline có hiệu năng thực tế rất tốt.
+
+\textbf{Random Forest}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.5.2.2.png}
+	\caption{Kết quả thực nghiệm Random Forest.}
+	\label{fig:bieudo4.5.2.2}
+\end{figure}
+
+Mô hình Random Forest thể hiện năng lực dự đoán đa nhãn chính xác và độ tự tin đồng đều trên cả 04 kịch bản nhờ cấu trúc tập hợp các cây quyết định. Thuật toán phân tách rất tốt các từ khóa mang đặc trưng mạnh để đưa ra xác suất vượt xa ngưỡng chuẩn, tiêu biểu như \textit{Optimism} (85.09\% ở kịch bản 1) hay \textit{Gratitude} (84.67\% ở kịch bản 3). Đặc biệt, ở câu văn phức tạp mang tính ẩn dụ ở kịch bản 2, Random Forest vẫn giữ được sự cân bằng và độ tự tin cao khi kích hoạt đồng thời hai nhãn đối lập là \textit{Amusement} (74.53\%) và \textit{Sadness} (66.89\%). Kết quả này cho thấy thuật toán có khả năng bao quát dữ liệu tốt, giảm thiểu hiện tượng quá khớp (overfitting) và là một đại diện học máy truyền thống cực kỳ mạnh mẽ.
+
+\textbf{LinearSVC}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.5.2.3.png}
+	\caption{Kết quả thực nghiệm LinearSVC.}
+	\label{fig:bieudo4.5.2.3}
+\end{figure}
+
+Mô hình LinearSVC (OVR) đạt hiệu năng nhận diện đa nhãn rất ấn tượng, thể hiện qua khoảng cách hình học Z đến đường ranh giới quyết định có độ phân tách lớn ở các nhãn chủ đạo như \textit{Gratitude} (Z = 1.3457 ở kịch bản 4) hay \textit{Excitement} (Z = 1.1642 ở kịch bản 5). Điểm cộng lớn của thuật toán này là khả năng tối ưu hóa ranh giới tuyến tính rất dứt khoát, giúp cô lập tốt các đặc trưng từ vựng mạnh. Tuy nhiên, tương tự như Hồi quy Logistic, do bản chất không học chuỗi ngữ cảnh, độ tự tin của LinearSVC bị kéo thấp đáng kể khi gặp các câu ẩn dụ ở kịch bản 2 và 3, khiến các nhãn đối lập như \textit{Amusement} (Z = 0.4280) hay \textit{Disappointment} (Z = 0.2704) rơi vào vùng mấp mém sát đường ranh giới kích hoạt.
+
+\textbf{CNN}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.5.2.4.png}
+	\caption{Kết quả thực nghiệm CNN.}
+	\label{fig:bieudo4.5.2.4}
+\end{figure}
+
+Mô hình mạng tích chập 1D CNN thể hiện khả năng trích xuất đặc trưng cục bộ rất nhạy bén nhờ cơ chế trượt của các bộ lọc (kernels). Sức mạnh này minh chứng rõ nhất ở kịch bản 3 khi cô lập và bắt trúng nhãn \textit{Gratitude} với độ tự tin gần như tuyệt đối (98.84\%), cao nhất trong số các mô hình thử nghiệm. Tuy nhiên, do cấu trúc CNN tập trung tóm lấy các tổ hợp n-gram mang tín hiệu cảm xúc mạnh nhất (qua lớp Max Pooling) thay vì duy trì toàn bộ ngữ cảnh chuỗi tuyến tính dài, mô hình có xu hướng bỏ sót các sắc thái mờ nhạt hơn trong câu phức. Cụ thể ở kịch bản 1, nhãn \textit{Gratitude} bị rơi rụng, hay ở kịch bản 4 mô hình chỉ giữ lại nhãn \textit{Excitement} (20.64\%) mà bỏ qua sự lo lắng (\textit{Nervousness}). Dù vậy, với các câu ngắn mang từ khóa đặc trưng như kịch bản 2 (\textit{Amusement} - 64.23\%), CNN vẫn chứng minh tốc độ phản hồi và năng lực nhận diện cục bộ cực kỳ đáng tin cậy.
+
+\textbf{LSTM}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.5.2.5.png}
+	\caption{Kết quả thực nghiệm LSTM.}
+	\label{fig:bieudo4.5.2.5}
+\end{figure}
+
+Mô hình mạng bộ nhớ dài-ngắn hạn LSTM (Bi-LSTM) thể hiện khả năng bao quát ngữ cảnh chuỗi rất tốt nhờ cơ chế các cổng nhớ (gates) duy trì thông tin tuyến tính. Đặc tính này giúp mô hình nhận diện mượt mà các tổ hợp câu dài mang sắc thái hỗn hợp, kích hoạt chính xác bộ ba nhãn \textit{Admiration} (58.43\%), \textit{Caring} (30.20\%), \textit{Optimism} (54.60\%) ở kịch bản 1, hay cô lập xuất sắc nhãn \textit{Gratitude} với độ tự tin cao (87.17\%) ở kịch bản 3. Tuy nhiên, so với các thuật toán học máy truyền thống hoặc cấu trúc CNN tập trung tóm sững đặc trưng mạnh cục bộ, mạng LSTM đôi khi có xu hướng phân phối xác suất 'phẳng' hơn khi đối mặt với các câu ẩn dụ hoặc chuyển biến trạng thái đột ngột. Hệ quả là ở kịch bản 2, mô hình chỉ giữ lại nhãn \textit{Amusement} (54.49\%) mà bỏ sót sắc thái tiêu cực đi kèm, và ở kịch bản 4 lại kích hoạt nhãn \textit{Joy} (45.50\%) thay vì sự lo lắng (\textit{Nervousness}). Dù vậy, LSTM vẫn chứng minh được ưu thế lớn về khả năng duy trì mạch ngữ nghĩa ổn định xuyên suốt văn bản.
+
+\subsection{So sánh kết quả thực nghiệm 5 mô hình}
+
+Dựa trên kết quả chạy thử nghiệm trực quan (Live Test) của cả 05 mô hình phân loại đa nhãn cảm xúc (Hồi quy Logistic, Random Forest, LinearSVC, CNN, và LSTM), nhóm nghiên cứu đưa ra các đánh giá đối chứng cụ thể như sau:
+\begin{itemize}
+	\item \textbf{Về năng lực nhận diện cấu trúc câu tường minh}: Tất cả 05 mô hình đều hoàn thành xuất sắc nhiệm vụ khi cô lập chính xác duy nhất nhãn \textit{Gratitude}. Trong đó, mô hình mạng tích chập CNN đạt độ tự tin cao nhất với 98.84\%, bám sát phía sau là LSTM (87.17\%), Random Forest (84.67\%), và Hồi quy Logistic (83.58\%). Điều này chứng minh khi văn bản chứa các từ khóa đặc trưng mạnh ("\textit{thank you}"), ranh giới phân loại của cả phương pháp truyền thống lẫn học sâu đều hoạt động rất tường minh.
+	
+	\item \textbf{Về khả năng xử lý câu chứa từ ngữ tương phản/ẩn dụ}: Đây là kịch bản chứng kiến sự phân hóa rõ rệt nhất về mặt kiến trúc thuật toán. Mô hình Random Forest thể hiện sự cân bằng đáng kinh ngạc khi kích hoạt song song hai nhãn đối lập \textit{Amusement} (74.53\%) và \textit{Sadness} (66.89\%) với độ tự tin cao. Mô hình Hồi quy Logistic và LinearSVC cũng nhận diện được hai sắc thái này nhưng điểm số rơi vào vùng mập mém sát ngưỡng kích hoạt. Ngược lại, các mạng học sâu (CNN và LSTM) do cơ chế tiền xử lý chặt chẽ và xu hướng tập trung vào các đặc trưng tối ưu hóa phân phối, nên chỉ kích hoạt nhãn chủ đạo \textit{Amusement} mà chấp nhận bỏ sót sắc thái tiêu cực đi kèm.
+	
+	\item \textbf{Về khả năng bao quát ngữ cảnh đa nhãn phức tạp}: Mô hình mạng LSTM chứng minh được ưu thế của cơ chế các cổng nhớ khi duy trì tốt mạch thông tin tuyến tính, giúp kích hoạt trọn vẹn bộ ba nhãn (Admiration, Caring, Optimism) ở câu chúc và bóc tách được các trạng thái chuyển biến tâm lý phức tạp. Trong khi đó, CNN do đặc tính tích chập và rút gọn thông tin cục bộ (Max Pooling) nên có xu hướng chỉ giữ lại các cụm n-gram có tín hiệu mạnh nhất, dẫn đến việc giải quyết bài toán đa nhãn ở kịch bản phức tạp bị thu hẹp hoặc sót nhãn so với các đối thủ còn lại.
+\end{itemize}
+
+Không có mô hình nào áp đảo tuyệt đối trên mọi kịch bản định tính. Các mô hình Học máy truyền thống (Random Forest, LinearSVC, Logistic Regression) thể hiện tư duy phân phối xác suất rất đều và nhạy với phân loại đa nhãn trên từ khóa. Trong khi đó, các mô hình Học sâu (CNN, LSTM) lại sở hữu những "đỉnh nhọn" về độ tự tin cực cao (gần như tuyệt đối) ở các phân đoạn ngữ cảnh cốt lõi được huấn luyện kỹ.

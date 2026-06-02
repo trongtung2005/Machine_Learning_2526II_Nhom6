@@ -1,0 +1,16 @@
+% Phụ lục B
+
+\chapter{Thống kê phân phối số lượng nhãn trên mỗi mẫu dữ liệu} % Tên của phụ lục
+
+\label{AppendixB} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{AppendixB} 
+
+%----------------------------------------------------------------------------------------
+
+Nhãn cảm xúc được coi là 'chỉ được chọn bởi một người gán nhãn duy nhất' khi trong một nhóm từ 3 đến 5 người cùng đọc một câu văn, chỉ có đúng một người lựa chọn nhãn đó còn những người khác thì không. Đây là những nhãn mang tính chủ quan cá nhân cao, dễ gây nhiễu nên đã được thuật toán lọc bỏ (chuyển từ pre-filter sang post-filter) để đảm bảo tính đồng thuận và giúp bộ dữ liệu sạch hơn trước khi đưa vào huấn luyện mô hình
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{B.png}
+	\caption{Thống kê số lượng nhãn cảm xúc trên mỗi mẫu dữ liệu trước và sau khi lọc bỏ các nhãn chỉ được chọn bởi một người gắn nhãn duy nhất.}
+	\label{fig:B}
+\end{figure}
