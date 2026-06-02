@@ -1,0 +1,179 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tiểu luận/Khóa luận/Luận văn/Luận án tốt nghiệp
+% LaTeX Template
+% Phiên bản 1.0 (tạo ra ngày 05/10/2022)
+% Edited &Modified by VietNC ngày 12/12/2022
+%
+% Template này có thể được download tại:
+% https://github.com/vietnc/HUS-template
+% https://github.com/cpc1996/HUS-Dissertation-Template
+% 
+%
+% Phiên bản 1.0 được chỉnh sửa bởi:
+% Công Phương Cao (congphuongcao_t59@hus.edu.vn)
+% Nguyễn Cảnh Việt (vietncp@gmail.com)
+
+% Template được tham khảo từ một phiên bản template của:
+% Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 1: CÁC PACKAGE CƠ BẢN VÀ CÁC TÙY CHỈNH VĂN BẢN
+%----------------------------------------------------------------------------------------
+\input{1.setup}
+%----------------------------------------------------------------------------------------
+%	PHẦN 2: THÔNG TIN VỀ Khóa luận tốt nghiệp/Tiểu luận (THESIS INFORMATION)
+% 	Điền thông tin của các bạn trong file(2.thesis-information) này 
+%----------------------------------------------------------------------------------------
+\input{2.thesis-information}
+%----------------------------------------------------------------------------------------------------------------------------------------
+\setcounter{secnumdepth}{4} % Cho phép đánh số định dạng đến cấp thứ 4 (\subsubsection)
+\setcounter{tocdepth}{4}    % Nếu muốn cấp này xuất hiện cả trong Mục lục (nhỏ hơn thì tăng lên)
+\usepackage{float}
+\usepackage{fontawesome5}
+\usepackage{twemojis}
+\begin{document}
+\lstset{style=codeC}	% Thiết lập ngôn ngữ C/C++ là ngôn ngữ mặc định cho phần liệt kê souce code của cả bài
+\frontmatter 			% Sử dụng hệ thống đánh số La Mã (i, ii, iii, iv...) cho những trang trước phần mục lục
+\pagestyle{plain} 
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)%
+%	PHẦN 3: TRANG TIÊU ĐỀ/TRANG BÌA (TITLE PAGE)
+%----------------------------------------------------------------------------------------
+% TRANG BÌA CHÍNH:
+\include{3.main-cover}
+% TRANG BÌA PHỤ:
+\include{4.sub-cover}
+%----------------------------------------------------------------------------------------
+%	PHẦN 4: DANH NGÔN (QUOTES)
+%----------------------------------------------------------------------------------------
+%\vspace*{0.2\textheight}
+
+%\noindent\enquote{\itshape 
+%	Cái tôi và sự hiểu biết tỷ lệ nghịch với nhau. Hiểu biết càng nhiều cái tôi càng bé. Hiểu biết càng ít, cái tôi càng to.
+%}\bigbreak
+
+%\hfill Albert Einstein
+%----------------------------------------------------------------------------------------
+%	PHẦN 5: LỜI CẢM ƠN (ACKNOWLEDGEMENTS)
+%	Các bạn ghi lời cảm ơn vào file(5.ack) này.
+%----------------------------------------------------------------------------------------
+\include{5.ack}
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 6: MỤC LỤC (LIST OF CONTENTS/FIGURES/TABLES PAGES)
+%	ĐẶT KHOẢNG CÁCH GIŨA CÁC TIÊU ĐỀ CỦA PHẦN 7
+%----------------------------------------------------------------------------------------
+\begin{spacing}{1.15}
+	\tableofcontents 	% In ra mục lục chính
+\end{spacing}
+
+\begin{spacing}{1.15}
+	\listoffigures 		% In ra danh sách hình vẽ
+\end{spacing}
+
+\begin{spacing}{1.15}
+	\listoftables		% In ra danh sách bảng
+\end{spacing}
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 7: DANH SÁCH TÊN VIẾT TẮT (ABBREVIATIONS)
+%
+%	Các từ viết tắt các bạn ghi ở đây
+%----------------------------------------------------------------------------------------
+\begin{abbreviations}{ll} % Thêm danh sách tên viết tắt (dưới dạng một bảng có 2 cột)
+
+\textbf{NLP} & \textbf{N}atural \textbf{L}anguage \textbf{P}rocessing\\
+\textbf{BoW} & \textbf{B}ag of \textbf{W}ord\\
+\textbf{TF - IDF} & \textbf{T}erm \textbf{F}requency -  \textbf{I}nvert \textbf{D}ocument \textbf{F}requency\\
+\textbf{SVM} & \textbf{S}upport \textbf{V}ector \textbf{M}achine\\
+\textbf{RF} & \textbf{R}andom \textbf{F}orest\\
+\textbf{CNN} & \textbf{C}onvolution \textbf{N}eural \textbf{N}etwork\\
+\textbf{LSTM} & \textbf{L}ong \textbf{S}hort - \textbf{T}erm \textbf{M}emory\\
+
+\end{abbreviations}
+%----------------------------------------------------------------------------------------
+%	PHẦN 8: CÁC HẰNG SỐ VẬT LÝ/THÔNG SỐ KĨ THUẬT (PHYSICAL CONSTANTS/OTHER DEFINITIONS)
+%----------------------------------------------------------------------------------------
+%\begin{constants}{lr@{${}={}$}l} % Thêm danh sách các hằng số (dưới dạng một bảng có 3 cột)
+%
+%%	Lệnh \SI{}{} được cung cấp bởi gói siunitx, hãy đọc tài liệu hướng dẫn để biết cách sử dụng nó
+%
+%%	Tên hằng số 	 & $Biểu tượng$	& $Hằng số$ cùng với đơn vị\\
+%	Vận tốc ánh sáng & $c_{0}$		& \SI{2.99792458e8}{\meter\per\second} (chính xác)\\
+%
+%\end{constants}
+%----------------------------------------------------------------------------------------
+%	PHẦN 9: DANH SÁCH KÝ HIỆU (SYMBOLS)
+%----------------------------------------------------------------------------------------
+
+%\begin{symbols}{lll} % Thêm danh sách các ký hiệu (dưới dạng một bảng có 3 cột)
+%
+%%   Ký hiệu	& Ý nghĩa		& Đơn vị \\
+%	$a$		& khoảng cách	& \si{\meter} \\
+%	$P$		& công suất		& \si{\watt} (\si{\joule\per\second}) \\
+%
+%	\addlinespace % Khoảng cách để phân biệt giữa ký hiệu Latin với ký hiệu La Mã
+%
+%	$\omega$ & tần số góc	& \si{\radian} \\
+%
+%\end{symbols}
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 10: LỜI ĐỀ TẶNG (DEDICATION)
+%----------------------------------------------------------------------------------------
+
+%\dedicatory{Dành tặng/Dành cho/Gửi tới\ldots} 
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 11: NỘI DUNG/CÁC CHƯƠNG Khóa luận tốt nghiệp/Tiểu luận (THESIS CONTENT - CHAPTERS)
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Bắt đầu đánh số trang (1,2,3...)
+
+\pagestyle{plain}
+
+% Hãy thêm những chương (chapter) của khóa luận/tiểu luận vào thư mục Chapters
+% Hãy bỏ chú thích những dòng nếu bạn đã bổ sung những chương vào
+
+\include{Chapters/Chapter0}
+\include{Chapters/Chapter1}
+\include{Chapters/Chapter2} 
+\include{Chapters/Chapter3}
+\include{Chapters/Chapter4} 
+\include{Chapters/Chapter5} 
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 12: TÀI LIỆU THAM KHẢO
+%----------------------------------------------------------------------------------------
+
+\begin{spacing}{1.15}
+	\printbibliography[heading=bibintoc, title=Tài liệu tham khảo] % In ra tài liệu tham khảo
+\end{spacing}
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 13: PHỤ LỤC (THESIS CONTENT - APPENDICES)
+%----------------------------------------------------------------------------------------
+
+\appendix % Nói với LaTeX rằng những chương về sau được tính là phụ lục
+
+% Hãy thêm những phụ lục (appendix) của khóa luận/tiểu luận vào thư mục Appendices
+% Hãy bỏ chú thích những dòng nếu bạn đã bổ sung những phụ lục vào
+
+\include{Appendices/AppendixA}
+\include{Appendices/AppendixB}
+\include{Appendices/AppendixC}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 
+%----------------------------------------------------------------------------------------------------------------------------------------
