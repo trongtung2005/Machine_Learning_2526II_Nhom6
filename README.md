@@ -1,10 +1,9 @@
-# 📝 PHÂN LOẠI ĐA NHÃN CẢM XÚC VĂN BẢN TRÊN TẬP DỮ LIỆU GOEMOTIONS
+# PHÂN LOẠI ĐA NHÃN CẢM XÚC VĂN BẢN TRÊN TẬP DỮ LIỆU GOEMOTIONS
 
 Đồ án tập trung nghiên cứu, triển khai thực nghiệm và đánh giá đối chứng hiệu năng của **05 mô hình Học máy truyền thống và Học sâu** trong bài toán phân loại đa nhãn (Multi-label Classification) trên tập dữ liệu biểu đạt 28 sắc thái cảm xúc `GoEmotions` của Google.
 
----
 
-## 📌 Tổng Quan Hệ Thống
+## Tổng Quan Hệ Thống
 
 Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết kế theo một đường ống dữ liệu (Pipeline) khép kín:
 1. **Tiền xử lý dữ liệu (NLP Pipeline):** Chuẩn hóa văn bản thô (lowercase), loại bỏ các ký tự đặc biệt, dấu câu, phân tách từ (Tokenization) và chuẩn hóa gốc từ (Lemmatization).
@@ -16,7 +15,7 @@ Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết k
 
 ---
 
-## 📊 Kịch Bản Thực Nghiệm Định Tính (Live Test)
+## Kịch Bản Thực Nghiệm Định Tính (Live Test)
 
 Để kiểm tra trực quan năng lực suy luận thực tế và khả năng phản ứng của bộ lọc ranh giới quyết định, hệ thống được chạy thử nghiệm đồng thời qua 04 kịch bản văn bản đầu vào (chưa từng xuất hiện trong tập huấn luyện):
 
@@ -27,7 +26,7 @@ Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết k
 
 ---
 
-## 📉 Phân Tích Kết Quả Thực Nghiệm
+## Phân Tích Kết Quả Thực Nghiệm
 
 ### 1. Đánh giá định lượng trên Ma trận nhầm lẫn (Confusion Matrix)
 * **Hiện tượng mất cân bằng dữ liệu (Class Imbalance):** Các ô True Negative (Mô hình đoán đúng nhãn 0) chiếm mật độ khổng lồ. Điều này hoàn toàn đồng nhất với đặc tính thưa thớt của dữ liệu đa nhãn thực tế khi một câu bình luận thường chỉ chứa từ 1 đến 2 sắc thái cảm xúc trong tổng số 28 lớp nhãn.
@@ -42,7 +41,7 @@ Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết k
 
 ---
 
-## 🛠 Hướng Dẫn Cài Đặt & Khởi Chạy
+## Hướng Dẫn Cài Đặt & Khởi Chạy
 
 ### 1. Cài đặt các thư viện phụ thuộc
 Hệ thống yêu cầu môi trường chạy Python 3.8+. Thực hiện cài đặt các gói thư viện cần thiết thông qua lệnh:
