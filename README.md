@@ -1,9 +1,10 @@
-# PHÂN LOẠI ĐA NHÃN CẢM XÚC VĂN BẢN TRÊN TẬP DỮ LIỆU GOEMOTIONS
+# 📝 PHÂN LOẠI ĐA NHÃN CẢM XÚC VĂN BẢN TRÊN TẬP DỮ LIỆU GOEMOTIONS
 
 Đồ án tập trung nghiên cứu, triển khai thực nghiệm và đánh giá đối chứng hiệu năng của **05 mô hình Học máy truyền thống và Học sâu** trong bài toán phân loại đa nhãn (Multi-label Classification) trên tập dữ liệu biểu đạt 28 sắc thái cảm xúc `GoEmotions` của Google.
 
+---
 
-## Tổng Quan Hệ Thống
+## 📌 Tổng Quan Hệ Thống
 
 Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết kế theo một đường ống dữ liệu (Pipeline) khép kín:
 1. **Tiền xử lý dữ liệu (NLP Pipeline):** Chuẩn hóa văn bản thô (lowercase), loại bỏ các ký tự đặc biệt, dấu câu, phân tách từ (Tokenization) và chuẩn hóa gốc từ (Lemmatization).
@@ -15,7 +16,7 @@ Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết k
 
 ---
 
-## Kịch Bản Thực Nghiệm Định Tính (Live Test)
+## 📊 Kịch Bản Thực Nghiệm Định Tính (Live Test)
 
 Để kiểm tra trực quan năng lực suy luận thực tế và khả năng phản ứng của bộ lọc ranh giới quyết định, hệ thống được chạy thử nghiệm đồng thời qua 04 kịch bản văn bản đầu vào (chưa từng xuất hiện trong tập huấn luyện):
 
@@ -26,7 +27,7 @@ Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết k
 
 ---
 
-## Phân Tích Kết Quả Thực Nghiệm
+## 📉 Phân Tích Kết Quả Thực Nghiệm
 
 ### 1. Đánh giá định lượng trên Ma trận nhầm lẫn (Confusion Matrix)
 * **Hiện tượng mất cân bằng dữ liệu (Class Imbalance):** Các ô True Negative (Mô hình đoán đúng nhãn 0) chiếm mật độ khổng lồ. Điều này hoàn toàn đồng nhất với đặc tính thưa thớt của dữ liệu đa nhãn thực tế khi một câu bình luận thường chỉ chứa từ 1 đến 2 sắc thái cảm xúc trong tổng số 28 lớp nhãn.
@@ -34,16 +35,18 @@ Hệ thống xử lý và nhận diện cảm xúc văn bản được thiết k
 * **Hạn chế tồn tại:** Hiện tượng thiếu hụt dữ liệu huấn luyện nghiêm trọng (Data Sparsity) khiến các nhãn thiểu số như *Grief, Pride* đạt hiệu năng thấp. Các nhãn có ranh giới ngữ nghĩa mập mờ (*Annoyance, Realization*) ghi nhận tỷ lệ nhận diện sai (False Positive) tương đối đáng kể.
 
 ### 2. So sánh đối chứng định tính giữa 05 Thuật toán
-* **Hồi quy Logistic & LinearSVC (OVR):** Thể hiện ưu thế phân tách ranh giới tuyến tính dứt khoát trên các câu tường minh (như nhãn *Gratitude* đạt điểm số độ tự tin $83.58\%$ và khoảng cách hình học $Z = 1.3457$). Tuy nhiên, độ tự tin bị sụt giảm lớn khi đối mặt với các từ ngữ mang tính ẩn dụ phức tạp.
-* **Random Forest:** Cho khả năng bao quát dữ liệu cực tốt nhờ cấu trúc tập hợp cây quyết định độc lập. Giữ sự cân bằng và độ tự tin cao nhất khi bóc tách chính xác đồng thời cả hai nhãn đối lập *Amusement* ($74.53\%$) và *Sadness* ($66.89\%$) ở câu chứa ngữ cảnh tương phản (Kịch bản 2).
+* **Hồi quy Logistic & LinearSVC (OVR):** Thể hiện ưu thế phân tách ranh giới tuyến tính dứt khoát trên các câu tường minh (nhũ nhãn *Gratitude* đạt điểm số độ tự tin $83.58\%$ và khoảng cách hình học $Z = 1.3457$). Tuy nhiên, độ tự tin bị sụt giảm lớn khi đối mặt với các từ ngữ mang tính ẩn dụ phức tạp.
+* **Random Forest:** Cho khả năng bao quát dữ liệu cực tốt nhờ cấu trúc tập hợp cây quyết định độc lập. Giữ sự cân bằng và độ tự tin cao nhất khi bóc tách chính xác đồng thời cả hai nhãn đối lập *Amusement* ($74.53\%$) và *Saness* ($66.89\%$) ở câu chứa ngữ cảnh tương phản (Kịch bản 2).
 * **Mạng 1D CNN:** Sở hữu năng lực trích xuất các đặc trưng cục bộ (n-gram mang tín hiệu cảm xúc) rất mạnh thông qua cơ chế trượt của bộ lọc và lớp Max Pooling. Đạt độ tự tin tối ưu nhất ở câu ngắn tường minh (*Gratitude* vọt lên mức **98.84%**), nhưng có xu hướng lược bỏ các sắc thái phụ ở câu phức dài.
 * **Mạng Bi-LSTM:** Chứng minh ưu thế tuyệt đối của cơ chế các cổng nhớ trong việc duy trì mạch ngữ nghĩa xuyên suốt chuỗi tuyến tính, giúp mô hình phân phối xác suất mềm mại và giữ lại trọn vẹn các sắc thái cảm xúc hỗn hợp đan xen tốt hơn cấu trúc CNN.
 
 ---
 
-## Hướng Dẫn Cài Đặt & Khởi Chạy
+## 🛠 Hướng Dẫn Khởi Chạy Trên Google Colab
+
+Dự án được tối ưu hóa để chạy trực tiếp trên môi trường đám mây **Google Colab** (sử dụng GPU T4 để tăng tốc huấn luyện các mạng học sâu).
 
 ### 1. Cài đặt các thư viện phụ thuộc
-Hệ thống yêu cầu môi trường chạy Python 3.8+. Thực hiện cài đặt các gói thư viện cần thiết thông qua lệnh:
-```bash
-pip install numpy pandas scikit-learn tensorflow gensim matplotlib seaborn nltk
+Thêm và chạy đoạn mã sau ở Cell đầu tiên của Notebook để chuẩn bị môi trường:
+```python
+!pip install numpy pandas scikit-learn tensorflow gensim matplotlib seaborn nltk
