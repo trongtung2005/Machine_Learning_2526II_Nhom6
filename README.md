@@ -1,6 +1,6 @@
 # PHÂN LOẠI ĐA NHÃN CẢM XÚC VĂN BẢN TRÊN TẬP DỮ LIỆU GOEMOTIONS
 
-Đồ án tập trung nghiên cứu, triển khai thực nghiệm và đánh giá đối chứng hiệu năng của 05 mô hình Học máy truyền thống và Học sâu trong bài toán phân loại đa nhãn (Multi-label Classification) trên tập dữ liệu biểu đạt 28 sắc thái cảm xúc GoEmotions của Google.
+Đề tài tập trung nghiên cứu, triển khai thực nghiệm và đánh giá đối chứng hiệu năng của 05 mô hình Học máy truyền thống và Học sâu trong bài toán phân loại đa nhãn (Multi-label Classification) trên tập dữ liệu biểu đạt 28 sắc thái cảm xúc GoEmotions của Google.
 
 Slide canva nhóm 6: https://canva.link/w24w1erhkvcqcl5
 
